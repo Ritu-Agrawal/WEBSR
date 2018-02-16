@@ -1,0 +1,341 @@
+﻿<div class="container-fluid sow-container"> <!--ng-controller="infoSowCtrl as sowCtrl">-->
+    <h5>Show Information</h5>    
+    <div class="fltr-sec">
+        <h6>Company Information</h6>
+        <div class="error-mes-bg" ng-if="sowCtrl.topSowInfoError">
+            {{sowCtrl.topSowInfoErrorTxt}}
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5">
+                        <!--<span class="text-red">*</span>-->Company Name
+                    </div>
+                    <div class="col-md-5">
+                        <input type="text" class="form-control custom-form-control" ng-model="sowCtrl.topSowInfoData.SOW_CompanyName" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5">
+                        Street Address
+                    </div>
+                    <div class="col-md-5">
+                        <input type="text" class="form-control custom-form-control" ng-model="sowCtrl.topSowInfoData.SOW_CompanyAddress" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5">
+                        City, State & Zip Code
+                    </div>
+                    <div class="col-md-5">
+                        <input type="text" class="form-control custom-form-control" ng-model="sowCtrl.topSowInfoData.SOW_SowAddress" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h6>Account Information</h6>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5">
+                        Account Delivery Manager(ADM)
+                    </div>
+                    <div class="col-md-5">
+                        <input type="text" class="form-control custom-form-control" ng-model="sowCtrl.topSowInfoData.SOW_AccountDeliveryManager" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5">
+                        PMPS Partner Name(if applicable)
+                    </div>
+                    <div class="col-md-5">
+                        <input type="text" class="form-control custom-form-control" ng-model="sowCtrl.topSowInfoData.SOW_PartnerName" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5">
+                        Account/Contract Numbers
+                    </div>
+                    <div class="col-md-5">
+                        <input type="text" class="form-control custom-form-control" ng-model="sowCtrl.topSowInfoData.SOW_AccountNumber" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h6>Billing Information</h6>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5">
+                        Billing Model
+                    </div>
+                    <div class="col-md-5">
+                        <div class="row selects-row">
+                            <div class="col-md-6">
+                                <select class="form-control" ng-model="sowCtrl.topSowInfoData.SOW_BillingModel">
+                                    <option ng-repeat="bmval in sowCtrl.topSowInfoData.billingModel">{{bmval}}</option> 
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <select class="form-control" ng-model="sowCtrl.topSowInfoData.SOW_BillingModelType">  
+                                    <option ng-repeat="bmvalType in sowCtrl.topSowInfoData.billingModelType">{{bmvalType}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5">
+                        Lease Term(in months)
+                    </div>
+                    <div class="col-md-5">
+                        <input type="text" class="form-control custom-form-control" ng-model="sowCtrl.topSowInfoData.SOW_LeaseTerm" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5">
+                        Lease Start Date
+                    </div>
+                    <div class="col-md-5">
+                        <input type="text" class="form-control custom-form-control" ng-model="sowCtrl.topSowInfoData.SOW_LeaseStartDate" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row ptop15">
+                    <div class="col-md-12 text-right">
+                        <button class="btn btn-blue" ng-click="sowCtrl.updateSowTopRowInfo(sowCtrl.topSowInfoData)">Save</button>
+                    </div>
+                </div>                
+            </div>            
+        </div>
+    </div>
+    
+
+    <!--<div class="row">
+        <div class="col-md-1"><p>Filter By</p></div>
+        <div class="col-md-2">
+            <select class="form-control">
+                <option>Device</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <select class="form-control">
+                <option>HP Laser Jet</option>
+            </select>
+        </div>
+    </div>-->
+    <div class="text-right">
+        <button class="btn btn-blue" ng-disabled="!sowCtrl.enableDataDesign" ng-click="sowCtrl.sowGetDesignDate()">Go to Data & Design</button>
+        <!--<button class="btn btn-blue" ng-disabled="!sowCtrl.generateSBRbtn" ng-click="sowCtrl.sowGenerateSbr()">Generate SBR</button>-->
+        <button class="btn btn-blue" ng-hide="!sowCtrl.downloadSBRbtn" ng-click="sowCtrl.sowDownloadSbr()">Download SBR Report</button>
+    </div>
+    <div class="table-block">
+        <div class="table-responsive">
+            <p class="error-mes-bg getSlow04s" ng-show="sowCtrl.textboxError">Minimum Monthy Volume should be always less than Maximum Monthy Volume</p>
+                <p class="table-header">Scope of Devices</p>
+                <table class="table table-bordered table-hover table-sow">
+                    <thead>
+                        <tr>
+                            <!--<th style="width:30px">#</th>-->
+                            <th>Device Group Description(60)</th>
+                            <th>Product Code</th>
+                            <th>Minimum Monthly Volume</th>
+                            <th>Maximum Monthly Volume</th>
+                            <th>Target Mono Volume</th>
+                            <th>Target Color Volume</th>
+                            <th><span> Target Color %</span> <input type="text" class="form-control custom-form-control" ng-model="sowCtrl.SOW_TargetColorDefaultPercent" ng-keyup="$event.keyCode == 13 ? sowCtrl.changeAllPercent(sowCtrl.sowdatamodelAll) : null" ng-blur="sowCtrl.changeAllPercent(sowCtrl.sowdatamodelAll)" maxlength="3" percentage="100" decimal-digit required /></th>
+                            <th>Supports 11X17 A3</th>
+                            <th>Supports Color</th>
+                            <th>Multi-Function(MFP)</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="sow in sowCtrl.sowdatamodelAll.slice(((currentPage-1)*itemsPerPage), ((currentPage)*itemsPerPage))">
+                            <!--<td>{{$index+1}}</td>-->
+                            <td>
+                                <textarea class="form-control hideElem" ng-model="sowCtrl.sowback.SOW_DeviceGroup" ng-show="sow.editable" ng-disabled="true"></textarea>
+                                <span class="nrmltxt" ng-show="!sow.editable">{{sow.SOW_DeviceGroup}}</span>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control custom-form-control" ng-model="sowCtrl.sowback.SOW_ProductCode" ng-show="sow.editable" ng-disabled="true" />
+                                <span class="nrmltxt" ng-show="!sow.editable">{{sow.SOW_ProductCode}}</span>
+                            </td>
+                            <td class="erormes-block">
+                                <input type="text" class="form-control custom-form-control" ng-model="sowCtrl.sowback.SOW_MinimumVolume" ng-show="sow.editable" maxlength="5" ng-class="{inputeror:sowCtrl.inputValidationError}" only-digit required /> 
+                                <span class="nrmltxt" ng-show="!sow.editable">{{sow.SOW_MinimumVolume}}</span>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control custom-form-control" ng-model="sowCtrl.sowback.SOW_MaximumVolume" ng-show="sow.editable" maxlength="5" only-digit required />
+                                <span class="nrmltxt" ng-show="!sow.editable">{{sow.SOW_MaximumVolume}}</span>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control custom-form-control" ng-model="sowCtrl.sowback.SOW_TargetMonoVolume" ng-show="sow.editable" maxlength="5" decimal-digit required />
+                                <span class="nrmltxt" ng-show="!sow.editable">{{sow.SOW_TargetMonoVolume}}</span>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control custom-form-control" ng-model="sowCtrl.sowback.SOW_TargetColorVolume" ng-show="sow.editable" ng-disabled="!sowCtrl.sowback.SOW_SupportColor" maxlength="5" decimal-digit required />
+                                <span class="nrmltxt" ng-show="!sow.editable">{{sow.SOW_TargetColorVolume}}</span>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control custom-form-control" ng-model="sowCtrl.sowback.SOW_TargetColorPercent" ng-show="sow.editable" maxlength="3" percentage="100" decimal-digit />
+                                <div class="nrmltxt" ng-show="!sow.editable">
+                                    <span ng-hide="sow.SOW_TargetColorPercent">{{sow.SOW_TargetColorPercent}}</span>
+                                    <span ng-hide="sow.SOW_TargetColorPercent ==='' ">{{sow.SOW_TargetColorPercent}}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <input type="checkbox" ng-model="sowCtrl.sowback.SOW_SupportA3" ng-show="sow.editable" />
+                                <span class="nrmltxt" ng-show="!sow.editable">
+                                    <span ng-show="sow.SOW_SupportA3 === false">No</span>
+                                    <span ng-show="sow.SOW_SupportA3 === true">Yes</span>
+                                </span>
+                            </td>
+                            <td>
+                                <input type="checkbox" ng-model="sowCtrl.sowback.SOW_SupportColor" ng-show="sow.editable" />
+                                <span class="nrmltxt" ng-show="!sow.editable">
+                                    <span ng-show="sow.SOW_SupportColor === false">No</span>
+                                    <span ng-show="sow.SOW_SupportColor === true">Yes</span>
+                                </span>
+                            </td>
+                            <td>
+                                <input type="checkbox" ng-model="sowCtrl.sowback.SOW_SupportMultiFunction" ng-show="sow.editable" />
+                                <span class="nrmltxt" ng-show="!sow.editable">
+                                    <span ng-show="sow.SOW_SupportMultiFunction === false">No</span>
+                                    <span ng-show="sow.SOW_SupportMultiFunction === true">Yes</span>
+                                </span>
+                            </td>
+                            <td class="action-block">
+                                <button type="submit" ng-show="sow.editable" ng-click="sowCtrl.updateSowRow(sow, sow.id)" ng-disabled="!sowCtrl.sowback.SOW_MinimumVolume||!sowCtrl.sowback.SOW_MaximumVolume||!sowCtrl.sowback.SOW_TargetColorPercent">Save</button>
+                                <span ng-show="sow.editable" ng-click="sowCtrl.resetSowRow(sow)" class="devider">Cancel</span>
+                                <span ng-show="!sow.editable" ng-click="sowCtrl.editSowRow(sow)">Edit</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            <p class="error-mes" ng-hide="!sowCtrl.lesslength">No Data Found !</p>
+        </div>
+    </div>
+    <div class="pagination-block" ng-hide="!sowCtrl.sowdatamodelAll.length">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="row selectpage-size">
+                    <div class="pull-left"><p class="beside-input">Show Rows</p></div> 
+                    <div class="col-md-2">
+                        <select class="form-control" ng-model="viewby" ng-change="setItemsPerPage(viewby)">
+                            <option value="5" ng-selected="true">5</option>
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="30">30</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">  
+                <div class="row"> 
+                    <div class="col-md-1"></div>                   
+                    <div class="col-md-8">
+                        <ul uib-pagination boundary-links="false" total-items="totalItems" ng-model="currentPage" items-per-page="itemsPerPage" class="pagination-sm pagination-custom" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+                    </div>
+                    <div class="col-md-3"><p class="beside-input text-right"><!--{{itemsPerPage}} of--> {{sowCtrl.sowdatamodelAll.length}} items</p></div>
+                </div>
+            </div>
+        </div> 
+    </div>
+    <!-- Modal -->
+    <div class="modal fade modal-middle" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" id="calculateModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Please click on Yes, If Auto calculation required</h4>
+                </div>
+                <div class="modal-body">
+                    <button type="button" class="btn btn-blue" id="btn-yes" value="Yes" ng-click="sowCtrl.calculateTarget(sowCtrl.rowdata, 'YesYes')">Yes</button> 
+                    <button type="button" class="btn btn-gray" data-dismiss="modal" value="No" ng-click="sowCtrl.calculateTarget(sowCtrl.rowdata, 'YesNo')">No</button>
+                </div> 
+            </div>
+        </div>
+    </div>
+    <!-- Modal All -->
+    <div class="modal fade modal-middle" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" id="calculateModalAll">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Please say Yes, If Auto calculation required</h4>
+                </div>
+                <div class="modal-body">
+                    <button type="button" class="btn btn-blue" id="btn-yes" value="Yes" ng-click="sowCtrl.calculateTarget(sowCtrl.sowdatamodelAll, 'NoYes')">Yes</button>
+                    <button type="button" class="btn btn-gray" data-dismiss="modal" value="No">No</button>
+                    <!--<button type="button" class="btn btn-gray" data-dismiss="modal" value="No" ng-click="sowCtrl.calculateTarget(sowCtrl.sowdatamodelAll, 'NoNo')">No</button>-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal new one -->
+    <div class="modal fade modal-middle" tabindex="-1" role="dialog" aria-labelledby="myModalLabel4" id="dataDesignModel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <p class="modal-title">The Data & Design tab calculates and displays average values for many important data points pertaining to the customer's fleet of machines.  This information can be used to evalulate and make the necessary changes to improve the fleet's performance and revenue earning capability.  The time span for these calculations can be adjusted to include all of the data entered on the Reports tab or as little as one month. </p>
+                </div>
+                <div class="modal-body">
+                    <div class="error" ng-if="errorMonth">The 'Last Month' cannot preceed the 'First Month'</div>
+                    <h5 class="text-center">Please select the month range you wish to evaluate.</h5>
+                    <div class="row makecenter">
+                        <div class="col-md-6">
+                            First Month
+                            <select class="form-control custom-form-control" ng-model="sowCtrl.sowStartMonth">
+                                <option ng-repeat="month in sowCtrl.monthData" value="{{month}}">{{month}}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            Last Month
+                            <select class="form-control custom-form-control" ng-model="sowCtrl.sowLastMonth">
+                                <option ng-repeat="month in sowCtrl.monthData" value="{{month}}">{{month}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="list-block">
+                        <h5>Notes:</h5>
+                        <ol class="list-group">
+                            <li>Clicking the 'Continue' button will delete any previously entered proposed changes on the Data & Design page.</li>
+                            <li>The range of months you select here will effect the 'Device Utilization' and 'Estimated Cost Per Page' lists in the QBR (Slides 32,33,49 & 50).  You should set the First and Last Month for the time span you want these slide to reflect.</li>
+                        </ol>
+                    </div>                   
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-blue" ng-disabled="!sowCtrl.sowStartMonth||!sowCtrl.sowLastMonth" ng-click="sowCtrl.sowDeleteDesignDate(sowCtrl.sowStartMonth, sowCtrl.sowLastMonth)">Continue</button>
+                    <button type="button" class="btn btn-gray" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

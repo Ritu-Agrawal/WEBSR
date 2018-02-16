@@ -1,0 +1,9 @@
+﻿<div class="container-fluid scrubber-container"> <!--ng-controller="infoSowCtrl as sowCtrl">-->
+    <div class="btn-row text-right">
+        <a class="btn btn-blue" ng-href="#/scrubber/loadReport" title="Load a PPU Service Incident Report">Load Service Report</a>
+        <a class="btn btn-blue" ng-href="#/scrubber/settings" title="SLA Definitions, Contract Coverage, Service Zones, etc.">Scrubber Settings</a>
+        <a class="btn btn-blue" ng-href="#/scrubber/compInfo" title="Company & Pro info">Company & Pro Info</a>
+        <a class="btn btn-blue" title="Clear all Service Data." ng-click="clearallData()">Clear All Data</a>
+    </div>
+    <div ui-view class="scrubber-views"></div>
+</div>

@@ -1,0 +1,363 @@
+﻿<div class="invoiceUsagePage">
+    <div class="container-fluid">
+        <div class="row" ng-controller="invoiceUsageController">
+            <div class="col-md-12">
+                <div class="btn-broup">
+                    <a class="btn btn-gray" data-toggle="pill" data-target="#invoice" id="invoiceReportTab" ng-class="{'activeTab': invoiceTab.isSelected}" ng-click="invoiceTab.isSelected = true" >Load Invoice Report(s)</a>
+                    <a class="btn btn-gray" data-toggle="pill" data-target="#usage" id="usageReportTab" ng-class="{'activeTab': !invoiceTab.isSelected}" ng-click="invoiceTab.isSelected = false">Load Usage Report(s)</a>
+                    <button class="btn btn-gray width170" ng-disabled="!fileSelected" ng-click="navigate('main.ProcessInvoiceTable')">Invoice & Usage Summary</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="invoice-cont-row">
+        <div class="container-fluid">
+            <div class="tab-content panel-collapse collapse in">
+                <div id="invoice" class="tab-pane fade in active" ng-controller="invoiceController" ng-init="invoiceUsageNav()">
+                    <div class="row" ng-show="invoice_inputs">
+                        <p class="fileUploadedMsg getSlow04s" ng-show="fileUploadedMsg">File uploaded successfully</p>
+                        <div class="col-md-6 left-section">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="input-group inputfile">
+                                        <label class="input-group-btn" for="file1">
+                                            <span class="btn btn-blue chooseBtn">Choose file</span>
+                                        </label>
+                                        <input type="file" id="file1" name="uploaderInvoiceFiles" accept=".xlsx, .xls" ng-files="getTheFiles($files)" ng-model="getFileName">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <button ng-click="uploadFiles()" class="btn btn-blue" id="uploadInvoiceFile" disabled>Upload Invoice File</button>
+                                </div>
+                                <div class="col-md-5 data-range" ng-if="invoiceFlag">
+                                    <span> Available Data Range: {{invoiceUsageNavData.startMonth}}-{{invoiceUsageNavData.startYear}}</span>
+                                    <span ng-if="invoiceUsageNavData.endMonth">To {{invoiceUsageNavData.endMonth}}-{{invoiceUsageNavData.endYear}}</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="row invoicecopies-row">
+                                        <div class="col-md-4">
+                                            <p>Month</p>
+                                            <select class="form-control" ng-model="monthVal" ng-options="month for month in Months" ng-change="selectMonth()" data-toggle="dropdown" ng-disabled="invoiceFlag">
+                                                <option value="">Select Month</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <p>Year</p>
+                                            <select class="form-control" ng-model="yearVal" ng-options="year for year in years" ng-change="selectYear()" ng-disabled="invoiceFlag">
+                                                <option value="">Select Year</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <p>No. of invoice copies</p>
+                                            <select class="form-control" ng-model="selectedInvoiceCopies" ng-options="invoice for invoice in invoiceData" ng-change="Invoiceselect()">
+                                                <option value="" style="display: none;">Select</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 left-divider">
+                                    <div class="row">
+                                        <h6 class="col-md-12">Payment Model</h6>
+                                        <div class="col-md-6" ng-init="changedVal='True'">
+                                            <label class="radio-inline"><input type="radio" name="rdoResult" ng-model="changedVal" value="True" ng-click="PaymentSelected()" ng-disabled="paymentFlag">Clicks (only) Arrears</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="radio-inline"><input type="radio" name="rdoResult" ng-model="changedVal" value="False" ng-click="PaymentSelected()" ng-disabled="paymentFlag">Base & Clicks in Arrears</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row invoicecopies-scnd-row">
+                                <div class="col-md-3">
+                                    <p>Source Currency</p>
+                                    <select class="form-control" ng-options="x.Currency_Listing for x in currencyData.CurrencyDetails" ng-model="sourceCurrencyData" ng-change="SourceCurrency()">
+                                        <option value="">Select Source Currency</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <p>Target Currency</p>
+                                    <select class="form-control" ng-options="x.Currency_Listing for x in currencyData.CurrencyDetails" ng-model="targetCurrencyData" ng-change="targetCurrency()" ng-disabled="currencyFlag">
+                                        <option value="">Select Target Currency</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <p class="empty">Requested Currency Date</p>
+                                    <input class="form-control custom-form-control" ng-model="currencyDate" placeholder="Select date" uib-datepicker-popup="MMMM dd, yyyy" datepicker-options="options" is-open="isOpen1" ng-click="isOpen1=true" ng-change="processDate(currencyDate)">
+                                </div>
+                                <div class="col-md-3">
+                                    <button class="btn btn-gray" ng-click="showCurrencyModal(currencyDate)">Curency Conversion</button>
+                                    <p>&nbsp;</p>
+                                    <button class="btn btn-blue" ng-click="updateCurrencyModal(currencyDate)" ng-disabled="!currencyDate">Update Currency</button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <p>Tab Name</p>
+                                    <select class="form-control" ng-model="selectedSheet" ng-options="x.TABLE_NAME for x in sheetData" ng-change="getselectdropdown()">
+                                        <option value="">Select Sheet Name</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <p>Heading Row</p>
+                                    <select class="form-control" ng-model="selectedItem" ng-options="selected for selected in headingRow" ng-change="getselectvalue()">
+                                        <option value="">Select Heading Row</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <p>1st Data Row</p>
+                                    <select class="form-control" ng-model="dataRow" ng-options="selected for selected in dataRowValues">
+                                        <option value="">Select Data Row</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 right-section left-divider">
+                            <div class="row btn-row">
+                                <div class="col-md-6">
+                                    <div class="error-pairing must-pairing">Please link all Required Source and Destination Columns</div>
+                                    <div class="error-pairing additional-pairing">You may select Additional Links or press Process Invoice</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-6">
+                                        <button type="button" class="btn btn-blue" ng-click="resetPairedColumn()" ng-show="resetBtnEnable">Reset All Link</button>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button type="submit" class="btn btn-blue" ng-click="processInvoiceData()" id="processInvoiceBtn">Process Invoice</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row link-block">
+                                <h4 class="col-md-12">Column Links</h4>
+                                <div class="col-md-4 drag-block">
+                                    <h5>Source Columns (Invoice)</h5>
+                                    <ul id="src-col">
+                                        <li id="{{'sc-'+$index}}" ng-repeat="x in headingRowData" class="draggable ui-state-default ui-widget-content ui-draggable ui-draggable-handle" onmouseover="getdragId(id)" droppable-columns>
+                                            {{ x.ColumnName }}
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-4 drop-block">
+                                    <h5>Default Columns (Performance Dashboard)</h5>
+                                    <ul id="def-col">
+                                        <li id="{{'dc-'+$index}}" ng-repeat="y in defaultcolumn" class="droppable ui-widget-header ui-droppable">
+                                            {{ y.ColumnName }}
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-4 result-block">
+                                    <h5>Paired Columns</h5>
+                                    <ul id="paired" class="connectedSortable"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mrg0" ng-show="invoice_unknown_devices">
+                        <div class="col-md-10">
+                            <h5>Unknown Device Groups</h5>
+                            <form name="UnknownInvoiceForm">
+                                <table class="table table-bordered invoice-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Product Code</th>
+                                            <th>Product Name</th>
+                                            <th>Minimum</th>
+                                            <th>Maximum</th>
+                                            <th>Multi-Function<br>Device</th>
+                                            <th>Supports<br>Color Printing</th>
+                                            <th>Supports<br>11x17</th>
+                                            <th>Skip</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="device in invoiceUnknownDevices">
+                                            <td><input type="text" class="form-control custom-form-control" ng-model="device.Product_Number" title="{{device.Product_Number}}" alt="{{device.Product_Number}}" required></td>
+                                            <td><input class="form-control custom-form-control" type="text" ng-model="device.Product_Name" title="{{device.Product_Name}}" alt="{{device.Product_Name}}" required></td>
+                                            <td><input class="form-control custom-form-control" type="text" ng-model="device.Minimum" maxlength="5" only-digit required></td>
+                                            <td><input class="form-control custom-form-control" type="text" ng-model="device.Maximum" maxlength="5" only-digit required></td>
+                                            <td><input type="checkbox" ng-model="device.MultiFunctionDevice"></td>
+                                            <td><input type="checkbox" ng-model="device.SupportsColorPrints"></td>
+                                            <td><input type="checkbox" ng-model="device.Supprots11x17Prints"></td>
+                                            <td><div class="unknown-device-close"><button type="button" class="close" aria-label="Close" ng-click="removeRow($index)"><span aria-hidden="true">×</span></button></div></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </form>
+                            <div class="btn-row">
+                                <button class="btn btn-blue" ng-mouseover="updateMsg = true" ng-mouseleave="updateMsg = false" ng-click="saveInvoiceDevice()" ng-disabled="UnknownInvoiceForm.$invalid">Update</button>
+                                <button class="btn btn-blue" ng-mouseover="skipAllMsg = true" ng-mouseleave="skipAllMsg = false" data-toggle="modal" data-target="#skipAllModal">Skip All</button>
+                                <button class="btn btn-blue" ng-mouseover="abortMsg = true" ng-mouseleave="abortMsg = false" data-toggle="modal" data-target="#abortModal">Abort</button>
+                            </div>
+                            <div class="btnMsg">
+                                <p ng-show="updateMsg">Import the corrected information.</p>
+                                <p ng-show="skipAllMsg">Do not import only these devices.</p>
+                                <p ng-show="abortMsg">Do not import any devices.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div id="skipAllModal" class="modal fade" role="dialog">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                        <h4 class="modal-title">Skip All</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>This option will delete all remaining devices with the same product code and/or product name.</p>
+                                        <p>Do you want to continue ? </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-blue" ng-click="skipAllInvoiceDevice()" data-dismiss="modal">Yes</button>
+                                        <button type="button" class="btn btn-gray" data-dismiss="modal">No</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="abortModal" class="modal fade" role="dialog">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                        <h4 class="modal-title">Abort</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>This option will delete all previously entered data from the selected report.</p>
+                                        <p>Do you want to continue ? </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-blue" ng-click="abortInvoiceDevice()" data-dismiss="modal">Yes</button>
+                                        <button type="button" class="btn btn-gray" data-dismiss="modal">No</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+  <!--/Usage-->
+                <div id="usage" class="tab-pane fade" ng-controller="usageController">
+                    <div class="row">
+                        <p class="fileUploadedMsg getSlow04s" ng-show="fileUploadedMsgUsage">File uploaded successfully</p>
+                        <div class="col-md-7" ng-show="usage_inputs">
+                            <!--<div class="row" id="{{'usageFileUploadRow' + $index}}">-->
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="input-group inputfile">
+                                        <label class="input-group-btn" for="file2">
+                                            <span class="btn btn-blue chooseBtn">Choose file</span>
+                                        </label>
+                                        <input type="file" id="file2" name="uploaderUsageFiles" accept=".xlsx, .xls" ng-files="getTheFiles($files)" ng-model="getUsageFileName">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 tabletop-row">
+                                    <p>Usage Data can be obtained from one of the following sources:</p>
+                                    <div class="col-md-12"> Device Trend Report (Customer Service Portal),<br>
+                                        FM Usage Report (Fleet Manager) or<br>
+                                        WebJet Usage Report (Web Jetadmin via LARC).
+                                    </div>
+                                </div>
+                                <div class="col-md-6 tabletop-row">
+                                    <p>Given the dates of the invoices entered and the payment model selected, the usage report time span should be as follows :</p>
+                                    <p>Start Date : {{invoiceUsageNavData.startMonth}}-{{invoiceUsageNavData.startYear}}<br>
+                                       End Date : {{invoiceUsageNavData.endMonth}}-{{invoiceUsageNavData.endYear}}  (On or Before)</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label><input type="checkbox" ng-model="overwriteLocInfo" ng-click="overwriteLocation()" />Overwrite all Location information</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <button class="btn btn-blue" ng-click="usageProcess()" id="usageProcessBtn" disabled>Process</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-show="usage_unknown_devices">
+                            <div class="col-md-10">
+                                <h5>Unknown Device Groups</h5>
+                                        <form name="UnknownUsageForm">
+                                            <table class="table table-bordered table-hover invoice-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Product Code</th>
+                                                        <th>Product Name</th>
+                                                        <th>Minimum</th>
+                                                        <th>Maximum</th>
+                                                        <th>Multi-Function<br>Device</th>
+                                                        <th>Supports<br>Color Printing</th>
+                                                        <th>Supports<br>11x17</th>
+                                                        <th>Skip</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr ng-repeat="device in usageUnknownDevices">
+                                                        <td><input type="text" class="form-control custom-form-control" ng-model="device.Product_Number" title="{{device.Product_Number}}" alt="{{device.Product_Number}}" required></td>
+                                                        <td><input type="text" class="form-control custom-form-control" ng-model="device.Product_Name" title="{{device.Product_Name}}" alt="{{device.Product_Name}}" required></td>
+                                                        <td><input type="text" class="form-control custom-form-control" ng-model="device.Minimum" maxlength="5" only-digit required></td>
+                                                        <td><input class="form-control custom-form-control" type="text" ng-model="device.Maximum" maxlength="5" only-digit required></td>
+                                                        <td><input type="checkbox" ng-model="device.MultiFunctionDevice"></td>
+                                                        <td><input type="checkbox" ng-model="device.SupportsColorPrints"></td>
+                                                        <td><input type="checkbox" ng-model="device.Supprots11x17Prints"></td>
+                                                        <td><div class="unknown-device-close"><button type="button" class="close" aria-label="Close" ng-click="removeRow($index)"><span aria-hidden="true">×</span></button></div></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </form>
+                                        <div class="btn-row">
+                                            <button class="btn btn-blue" ng-mouseover="updateMsg = true" ng-mouseleave="updateMsg = false" ng-click="saveUsageDevice()" ng-disabled="UnknownUsageForm.$invalid">Update</button>
+                                            <button class="btn btn-blue" ng-mouseover="skipAllMsg = true" ng-mouseleave="skipAllMsg = false" data-toggle="modal" data-target="#skipAllUsageModal">Skip All</button>
+                                            <button class="btn btn-blue" ng-mouseover="abortMsg = true" ng-mouseleave="abortMsg = false" data-toggle="modal" data-target="#abortUsageModal">Abort</button>
+                                        </div>
+                                        <div class="btnMsg">
+                                            <p ng-show="updateMsg">Import the corrected information.</p>
+                                            <p ng-show="skipAllMsg">Do not import only these devices.</p>
+                                            <p ng-show="abortMsg">Do not import any devices.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div id="skipAllUsageModal" class="modal fade" role="dialog">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                <h4 class="modal-title">Skip All</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>This option will delete all remaining devices with the same product code and/or product name.</p>
+                                                <p>Do you want to continue ? </p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-blue" ng-click="skipAllUsageDevice()" data-dismiss="modal">Yes</button>
+                                                <button type="button" class="btn btn-gray" data-dismiss="modal">No</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="abortUsageModal" class="modal fade" role="dialog">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                <h4 class="modal-title">Abort</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>This option will delete all previously entered data from the selected report.</p>
+                                                <p>Do you want to continue ? </p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-blue" ng-click="abortUsageDevice()" data-dismiss="modal">Yes</button>
+                                                <button type="button" class="btn btn-gray" data-dismiss="modal">No</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+            </div>
+        </div>
+    </div>
+</div> 

@@ -1,0 +1,746 @@
+﻿<div class="cont-inrsection container-fluid" id="process" ng-controller="processInvoiceTableController">   
+     <div class="cont-header-section wipetab-header" ng-init="getInvoiceReport()">        
+        <div class="row">
+            <div class="col-md-6 tabletop-row" ng-if="invoiceFlag">
+                <h5>
+                    <span> Available Data Range: {{invoiceAvailableData.startMonth}}-{{invoiceAvailableData.startYear}}</span>
+                    <span ng-if="invoiceAvailableData.endMonth">To {{invoiceAvailableData.endMonth}}-{{invoiceAvailableData.endYear}}</span>
+                </h5>
+            </div>
+            <div class="col-md-6 tabletop-row" ng-if="invoiceFlag">
+                <h5>
+                    <span> Target Currency: {{invoiceAvailableData.TargetCurrency}}</span>
+                </h5>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-10">
+                <button class="btn btn-gray" ng-click="deleteLastMonthData()" title="Delete Last Month Data">Delete Last Month Data</button>                                
+            </div>
+            <div class="col-md-2">
+                <div class="row">
+                    <div class="col-md-5 pull-right">
+                        <select class="form-control" type="dropdown">
+                            <option>Excel</option>
+                            <option>Pdf</option>
+                        </select>
+                    </div>
+                    <div class="pull-right"><p class="beside-input">Export to:</p></div>
+                </div>
+            </div>
+        </div>
+        <div class="error-mes-bg" ng-show="btnsResult">No result found of {{btnStatus}}</div>
+        <!--Button Rows kept here before fixed resolution issue--> 
+    </div>
+    <div class="modal fade model-table bs-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <!--<div class="modal fade" id="myModal" role="dialog">-->
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content responsive-table">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <div class="btn-row">
+                        <button class="btn btn-gray" type="button" data-target="#addgroup" aria-controls="addgroup" role="tab" data-toggle="tab">Add Group</button>
+                        <button class="btn btn-gray" type="button" data-target="#existinggroup" aria-controls="existinggroup" role="tab" data-toggle="tab">Existing Groups</button>
+                    </div>
+                </div>
+                <div class="tab-content modal-body">
+                    <div id="addgroup" class="tab-pane fade in active">
+                        <!--<p> <labe>Group Name</labe> <input type="text" ng-model="grpName" /></p>-->
+                        <div class="row padbtm">
+                            <div class="col-md-10 beside-input">
+                                <div class="pull-left"><label class="beside-input">Group Name</label></div>
+                                <div class="col-md-3"> 
+                                    <input type="text" ng-model="grpName" class="form-control custom-form-control ng-valid ng-touched ng-dirty"> 
+                                </div> 
+                            </div>
+                            <div class="col-md-2">
+                                <div class="row">
+                                    <div class="col-md-9 pull-right">
+                                        <button type="button" data-dismiss="modal" class="btn btn-blue" ng-disabled="!(selectedProcessInvoiceRow.length !==0 &amp;&amp; grpName !== undefined &amp;&amp; grpName!==&quot;&quot;)" ng-click="saveAddGroup()">Save</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p class="errormes" ng-show="errormes">{{adjustedRowCounter}} row(s) are removed, as those are adjusted in other Group</p>
+                                <p class="errormes" ng-show="errRequired">Please fill group name</p>
+                            </div>
+                        </div>
+                            <table id="popup-table1" class="table table-bordered">
+                                <thead class="">
+                                    <tr class="set-first-column">
+                                        <th><!--<input type="checkbox" ng-click="selectAllCheckBox()" />--></th>
+                                        <th>Area</th>
+                                        <th>Site</th>
+                                        <th>Building</th>
+                                        <th>Level</th>
+                                        <th>Grid</th>
+                                        <th>Business Unit</th>
+                                        <th>Report Groups</th>
+                                        <th>Model Description</th>
+                                        <th>Product Code</th>
+                                        <th>Serial Number</th>
+                                        <th>Lease Start / Renewal Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!--<tr ng-repeat="rows in selectedProcessInvoiceRow track by $index">-->
+                                    <tr ng-repeat="item in selectedProcessInvoiceRow track by $index" class="set-first-column">
+                                        <td><input type="checkbox" ng-model="item.selected" /></td>
+                                        <td title="{{item.Loc_Area}}" alt="{{item.Loc_Area}}">{{item.Loc_Area}}</td>
+                                        <td title="{{item.Loc_Site}}" alt="{{item.Loc_Site}}">{{item.Loc_Site}}</td>
+                                        <td title="{{item.Loc_Building}}" alt="{{item.Loc_Building}}">{{item.Loc_Building}}</td>
+                                        <td title="{{item.Loc_Level}}" alt="{{item.Loc_Level}}">{{item.Loc_Level}}</td>
+                                        <td title="{{item.Loc_Grid}}" alt="{{item.Loc_Grid}}">{{item.Loc_Grid}}</td>
+                                        <td title="{{item.Loc_Business_Unit}}" alt="{{item.Loc_Business_Unit}}">{{item.Loc_Business_Unit}}</td>
+                                        <td title="{{item.Loc_Report_Groups}}" alt="{{item.Loc_Report_Groups}}">{{item.Loc_Report_Groups}}</td>
+                                        <td title="{{item.Device_ModelDescription}}" alt="{{item.Device_ModelDescription}}">{{item.Device_ModelDescription}}</td>
+                                        <td title="{{item.Device_ProductCode}}" alt="{{item.Device_ProductCode}}">{{item.Device_ProductCode}}</td>
+                                        <td title="{{item.Device_SerialNumber}}" alt="{{item.Device_SerialNumber}}">{{item.Device_SerialNumber}}</td>
+                                        <td title="{{getDateFormat(item.Device_LeaseRenewalStratDate)|date:'MM-dd-yyyy'}}" alt="{{getDateFormat(item.Device_LeaseRenewalStratDate)|date:'MM-dd-yyyy'}}">{{getDateFormat(item.Device_LeaseRenewalStratDate)|date:'MM-dd-yyyy'}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                    </div>
+                    <div id="existinggroup" class="tab-pane fade">
+                        <div class="row padbtm">
+                            <div class="col-md-6 beside-input">
+                                <div class="pull-left"><label class="beside-input">Select Group</label></div>
+                                <div class="col-md-4">
+                                    <select class="form-control" ng-model="groupNames" ng-change="groupNameFilter()">
+                                        <option value="" selected="selected" style="display: none;">Select Group</option>
+                                        <option ng-repeat="item in allItems | unique: 'Loc_Report_Groups'" value="{{item.Loc_Report_Groups}}" ng-hide="item.Loc_Report_Groups ==''">{{item.Loc_Report_Groups}}</option>
+                                    </select>
+                                   
+                                </div>
+                            </div>
+                            <div class="col-md-6 text-right">
+                                        <button type="button" class="btn btn-gray" ng-click="clearGroup()" ng-disabled="groupNames === ''">Clear Group</button>
+                                        <button type="button" class="btn btn-gray" ng-click="deleteSelectedRow()" ng-disabled="groupNames === ''">Delete Selected</button>
+                            </div>
+                        </div>
+                        <table id="popup-table1" class="table table-bordered">
+                            <thead class="">
+                                <tr  class="set-first-column">
+                                    <th></th>
+                                    <th>Area</th>
+                                    <th>Site</th>
+                                    <th>Building</th>
+                                    <th>Level</th>
+                                    <th>Grid</th>
+                                    <th>Business Unit</th>
+                                    <th>Report Groups</th>
+                                    <th>Model Description</th>
+                                    <th>Product Code</th>
+                                    <th>Serial Number</th>
+                                    <th>Lease Start / Renewal Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="m in groupList track by $index">
+                                    <td><input type="checkbox" ng-model="m.selected"></td>
+                                    <td>{{m.Loc_Area}}</td>
+                                    <td>{{m.Loc_Site}}</td>
+                                    <td>{{m.Loc_Building}}</td>
+                                    <td>{{m.Loc_Level}}</td>
+                                    <td>{{m.Loc_Grid}}</td>
+                                    <td>{{m.Loc_Business_Unit}}</td>
+                                    <td>{{m.Loc_Report_Groups}}</td>
+                                    <td>{{m.Device_ModelDescription}}</td>
+                                    <td>{{m.Device_ProductCode}}</td>
+                                    <td>{{m.Device_SerialNumber}}</td>
+                                    <td>{{getDateFormat(m.Device_LeaseRenewalStratDate)|date:'MM-dd-yyyy'}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--</div>-->
+    </div><!--Month wise Invoice table-->
+    <div class="table-block processInv-table-block">
+        <div class="row processbtns-row">
+            <div class="col-md-2 btn-row addgroupbtn-block">
+                <span class="btn btn-blue" data-toggle="modal" data-target="#myModal" ng-click="addGroup()" title="Add Group">+ Add Group</span>
+            </div>
+            <div class="col-md-8 btn-row">
+                <span class="ftrbtn-block">
+                    <span class="btn btn-gray" ng-class="{active:status == 'OFF'}" ng-click="resetFilter()" title="Turn all 'Preset Filter Views' OFF">OFF</span>
+                    <span class="btn btn-gray" ng-class="{active:status == 'ARD'}" ng-click="filterStatus('ARD',ARDCount)" title="View 'All Reporting Devices'">ARD {{ARDCount}}</span>
+                    <span class="btn btn-gray" ng-class="{active:status == 'IRD'}" ng-click="filterStatus('IRD',IRDCount)" title="View 'Invoiced Reporting Devices'">IRD {{IRDCount}}</span>
+                    <span class="btn btn-gray" ng-class="{active:status == 'NRD'}" ng-click="filterStatus('NRD',NRDCount)" title="View 'Non-Reporting Devices'">NRD {{NRDCount}}</span>
+                    <span class="btn btn-gray noclickable" ng-class="{active:status == 'Storage'}" title="Storage">Storage {{storageCount}}</span>
+                    <span class="btn btn-gray noclickable" ng-class="{active:status == 'Local'}" title="Local">Local {{localCount}}</span>
+                    <span class="btn btn-gray noclickable" ng-class="{active:status == 'Other'}" title="Other">Other {{otherCount}}</span>
+                    <span class="btn btn-gray" ng-class="{active:status == 'NID'}" ng-click="filterStatus('NID',NIDCount)" title="View 'Non-Invoiced Devices'">NID {{NIDCount}}</span>
+                    <span class="btn btn-gray noclickable" ng-class="{active:status == 'Ignore'}" title="Ignore">Ignore {{ignoreCount}}</span>
+                    <span class="btn btn-gray noclickable" ng-class="{active:status == 'NEW'}" title="NEW">NEW {{newCount}}</span>
+                    <span class="quicktext-block">
+                        <strong class="quicktxt">Quick Filters</strong>
+                        <i class="hlines"></i>
+                        <i class="hlines scnd"></i>
+                    </span>
+                </span>
+                <button class="btn btn-blue leftspace" ng-click="saveAllData()" ng-disabled="!modified" title="SAVE ALL">Save All</button>
+            </div>
+            <!--<div class="col-md-1 btn-row">
+                                
+            </div>-->
+            <div class="col-md-2 btn-row text-right switchview-block">
+                <button class="btn btn-gray text-right" ng-click="switchTableView()" title="{{individualRowData?'Month View':'Line View'}}">Switch View</button>
+            </div>
+        </div>
+        <div class="responsive-table" ng-show="individualRowData">
+            <div class="tabletop-row invoiceSummaryTopRow">
+                <div class="col-md-5">
+                    <div class="row">
+                        <div class="col-md-7">
+                            <h5>Location</h5>
+                        </div>
+                        <div class="col-md-5">
+                            <h5>Device Information</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="row">
+                        <div class="col-md-7 ic-arrow">
+                            <i class="glyphicon glyphicon-arrow-left" aria-hidden="true" ng-click="prev()" ng-disabled="disableLeftBtn" ng-class="{active:!disableLeftBtn}"></i>
+                            <h5>Usage</h5>
+                        </div>
+                        <div class="col-md-5 ic-arrow">
+                            <h5>Charges</h5>
+                            <i class="glyphicon glyphicon-arrow-right" aria-hidden="true" ng-click="next()" ng-disabled="" ng-class="{active:!disableRightBtn}"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <table class="table table-bordered has-scroll-body has-child process-invoice-table">
+                <thead>
+                    <tr>
+                        <th colspan="12">
+                            <table class="table table-bordered table-child">
+                                <thead class="blue-bg">
+                                    <tr class="set-first-column left-blue-heading setcolwidth-sumrytable">
+                                        <th></th>
+                                        <th>Area</th>
+                                        <th>Site</th>
+                                        <th>Building</th>
+                                        <th>Level</th>
+                                        <th>Grid</th>
+                                        <th>Business Unit</th>
+                                        <th>Report Groups</th>
+                                        <th>Model Description</th>
+                                        <th>Product Code</th>
+                                        <th>Serial Number</th>
+                                        <th>Lease Start / Renewal Date</th>
+                                    </tr>
+                                    <tr class="height36">
+                                        <th class="text-center"><input type="checkbox" ng-model="selectAll" ng-click="selectAllFilteredItems()" /></th>
+                                        <th>
+                                            <!--<select class="form-control" ng-model="filterList.Loc_Area" ng-change="filterInvoiceData()">
+                                                <option value="">All</option>
+                                                <option ng-repeat="item in allItems | unique: 'Loc_Area'" value="{{item.Loc_Area}}" ng-hide="item.Loc_Area ==''">{{item.Loc_Area}}</option>
+                                            </select>-->
+                                            <div ng-dropdown-multiselect="" options="itemsDate" selected-model="filtermodel.Loc_Area" checkboxes="true" extra-settings="extraSettings" display-prop="'Loc_Area'" filter-invoice-data="filterInvoiceData()"></div> 
+                                        </th>
+                                        <th>
+                                            <!--<select class="form-control" ng-model="filterList.Loc_Site" ng-change="filterInvoiceData()">
+                                                <option value="">All</option>
+                                                <option ng-repeat="item in allItems | unique: 'Loc_Site'" value="{{item.Loc_Site}}" ng-hide="item.Loc_Site ==''">{{item.Loc_Site}}</option>
+                                            </select>-->
+                                            <div ng-dropdown-multiselect="" options="itemsDate" selected-model="filtermodel.Loc_Site" checkboxes="true" extra-settings="extraSettings" display-prop="'Loc_Site'" filter-invoice-data="filterInvoiceData()"></div> 
+                                        </th>
+                                        <th>
+                                            <!--<select class="form-control" ng-model="filterList.Loc_Building" ng-change="filterInvoiceData()">
+                                                <option value="">All</option>
+                                                <option ng-repeat="item in allItems | unique: 'Loc_Building'" value="{{item.Loc_Building}}" ng-hide="item.Loc_Building ==''">{{item.Loc_Building}}</option>
+                                            </select>-->
+                                            <div ng-dropdown-multiselect="" options="itemsDate" selected-model="filtermodel.Loc_Building" checkboxes="true" extra-settings="extraSettings" display-prop="'Loc_Building'" filter-invoice-data="filterInvoiceData()"></div> 
+                                        </th>
+                                        <th>
+                                            <!--<select class="form-control" ng-model="filterList.Loc_Level" ng-change="filterInvoiceData()">
+                                                <option value="">All</option>
+                                                <option ng-repeat="item in allItems | unique: 'Loc_Level'" value="{{item.Loc_Level}}" ng-hide="item.Loc_Level ==''">{{item.Loc_Level}}</option>
+                                            </select>-->
+                                            <div ng-dropdown-multiselect="" options="itemsDate" selected-model="filtermodel.Loc_Level" checkboxes="true" extra-settings="extraSettings" display-prop="'Loc_Level'" filter-invoice-data="filterInvoiceData()"></div> 
+                                        </th>
+                                        <th>
+                                            <!--<select class="form-control" ng-model="filterList.Loc_Grid" ng-change="filterInvoiceData()">
+                                                <option value="">All</option>
+                                                <option ng-repeat="item in allItems | unique: 'Loc_Grid'" value="{{item.Loc_Grid}}" ng-hide="item.Loc_Grid ==''">{{item.Loc_Grid}}</option>
+                                            </select>-->
+                                            <div ng-dropdown-multiselect="" options="itemsDate" selected-model="filtermodel.Loc_Grid" checkboxes="true" extra-settings="extraSettings" display-prop="'Loc_Grid'" filter-invoice-data="filterInvoiceData()"></div> 
+                                        </th>
+                                        <th>
+                                            <!--<select class="form-control" ng-model="filterList.Loc_Business_Unit" ng-change="filterInvoiceData()">
+                                                <option value="">All</option>
+                                                <option ng-repeat="item in allItems | unique: 'Loc_Business_Unit'" value="{{item.Loc_Business_Unit}}" ng-hide="item.Loc_Business_Unit ==''">{{item.Loc_Business_Unit}}</option>
+                                            </select>-->
+                                            <div ng-dropdown-multiselect="" options="itemsDate" selected-model="filtermodel.Loc_Business_Unit" checkboxes="true" extra-settings="extraSettings" display-prop="'Loc_Business_Unit'" filter-invoice-data="filterInvoiceData()"></div> 
+                                        </th>
+                                        <th>
+                                            <!--<select class="form-control" ng-model="filterList.Loc_Report_Groups" ng-change="filterInvoiceData()">
+                                                <option value="">All</option>
+                                                <option ng-repeat="item in allItems | unique: 'Loc_Report_Groups'" value="{{item.Loc_Report_Groups}}" ng-hide="item.Loc_Report_Groups ==''">{{item.Loc_Report_Groups}}</option>
+                                            </select>-->
+                                            <div ng-dropdown-multiselect="" options="itemsDate" selected-model="filtermodel.Loc_Report_Groups" checkboxes="true" extra-settings="extraSettings" display-prop="'Loc_Report_Groups'" filter-invoice-data="filterInvoiceData()"></div> 
+                                        </th>
+                                        <th>
+                                            <!--<select class="form-control" ng-model="filterList.Device_ModelDescription" ng-change="filterInvoiceData()">
+                                                <option value="">All</option>
+                                                <option ng-repeat="item in allItems | unique: 'Device_ModelDescription'" value="{{item.Device_ModelDescription}}" ng-hide="item.Device_ModelDescription ==''">{{item.Device_ModelDescription}}</option>
+                                            </select>-->
+                                            <div ng-dropdown-multiselect="" options="itemsDate" selected-model="filtermodel.Device_ModelDescription" checkboxes="true" extra-settings="extraSettings" display-prop="'Device_ModelDescription'" filter-invoice-data="filterInvoiceData()"></div>
+                                        </th>
+                                        <th>
+                                            <!--<select class="form-control" ng-model="filterList.Device_ProductCode" ng-change="filterInvoiceData()">
+                                                <option value="">All</option>
+                                                <option ng-repeat="item in allItems | unique: 'Device_ProductCode'" value="{{item.Device_ProductCode}}" ng-hide="item.Device_ProductCode ==''">{{item.Device_ProductCode}}</option>
+                                            </select>-->
+                                            <div ng-dropdown-multiselect="" options="itemsDate" selected-model="filtermodel.Device_ProductCode" checkboxes="true" extra-settings="extraSettings" display-prop="'Device_ProductCode'" filter-invoice-data="filterInvoiceData()"></div>
+                                        </th>
+                                        <th>
+                                            <!--<select class="form-control" ng-model="filterList.Device_SerialNumber" ng-change="filterInvoiceData()">
+                                                <option value="">All</option>
+                                                <option ng-repeat="item in allItems | unique: 'Device_SerialNumber'" value="{{item.Device_SerialNumber}}" ng-hide="item.Device_SerialNumber ==''">{{item.Device_SerialNumber}}</option>
+                                            </select>-->
+                                            <div ng-dropdown-multiselect="" options="itemsDate" selected-model="filtermodel.Device_SerialNumber" checkboxes="true" extra-settings="extraSettings" display-prop="'Device_SerialNumber'" filter-invoice-data="filterInvoiceData()"></div>
+                                        </th>
+                                        <th>
+                                            <!--<select class="form-control" ng-model="filterList.Device_LeaseRenewalStratDate" ng-change="filterInvoiceData()">
+                                                <option value="">All</option>
+                                                <option ng-repeat="item in allItems | unique: 'Device_LeaseRenewalStratDate'" value="{{getDateFormat(item.Device_LeaseRenewalStratDate)|date:'MM-dd-yyyy'}}" ng-hide="item.Device_LeaseRenewalStratDate ==''">{{getDateFormat(item.Device_LeaseRenewalStratDate)|date:'MM-dd-yyyy'}}</option>
+                                            </select>-->
+                                            <div ng-dropdown-multiselect="" options="itemsDate" selected-model="filtermodel.Device_LeaseRenewalStratDate" checkboxes="true" extra-settings="extraSettings" display-prop="'Device_LeaseRenewalStratDate'" filter-invoice-data="filterInvoiceData()"></div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </th>
+                        <th colspan="18" class="full-height right-table">
+                            <table class="table table-bordered table-child full-height">
+                                <thead class="full-height gray-bg">
+                                    <tr>
+                                        <th class="deviceTh text-center">Device <br>Status</th>
+                                        <th>Mono</th>
+                                        <th>Color</th>
+                                        <th>Color Pro</th>
+                                        <th>Color Accent</th>
+                                        <th>Duplex Sheets</th>
+                                        <th>Simplex</th>
+                                        <th>11x17 A3</th>
+                                        <th>Copy Usage</th>
+                                        <th>Total Scan <br>Usage</th>
+                                        <th>&nbsp;&nbsp;&nbsp; Digital<br /> Send <br>Usage</th>
+                                        <th>Faxes Rec'd</th>
+                                        <th>Total Pages</th>
+                                        <th>Base Charge</th>
+                                        <th>Mono Rate</th>
+                                        <th>Color Rate</th>
+                                        <th>Color Pro Rate</th>
+                                        <th>Color Acc Rate</th>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="13" class="text-center gray2-bg height35" ng-if="usage.length">{{usage[0].Month}} {{usage[0].Year}}</td>
+                                        <td colspan="13" class="height35" ng-if="invoice.length && !usage.length"></td>
+                                        <td colspan="5" class="text-center gray3-bg height35" ng-if="invoice.length">{{invoice[0].Month}}{{invoice[0].Year}}</td>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="scroll-tbody" ng-style="{height: setTableHeight + 'px'}">
+                    <tr>
+                        <td colspan="12">
+                            <table class="table table-bordered table-child">
+                                <tbody>
+                                    <!--<tr class="height36"><td></td></tr>-->
+                                    <tr class="set-first-column add-ellipsis height35 setcolwidth-sumrytable" ng-repeat="item in items">
+                                        <td><input type="checkbox" ng-model="item.selected" value="{{$index+1}}" /></td>
+                                        <td title="{{item.Loc_Area}}" alt="{{item.Loc_Area}}">{{item.Loc_Area}}</td>
+                                        <td title="{{item.Loc_Site}}" alt="{{item.Loc_Site}}">{{item.Loc_Site}}</td>
+                                        <td title="{{item.Loc_Building}}" alt="{{item.Loc_Building}}">{{item.Loc_Building}}</td>
+                                        <td title="{{item.Loc_Level}}" alt="{{item.Loc_Level}}">{{item.Loc_Level}}</td>
+                                        <td title="{{item.Loc_Grid}}" alt="{{item.Loc_Grid}}">{{item.Loc_Grid}}</td>
+                                        <td title="{{item.Loc_Business_Unit}}" alt="{{item.Loc_Business_Unit}}">{{item.Loc_Business_Unit}}</td>
+                                        <td title="{{item.Loc_Report_Groups}}" alt="{{item.Loc_Report_Groups}}">{{item.Loc_Report_Groups}}</td>
+                                        <td title="{{item.Device_ModelDescription}}" alt="{{item.Device_ModelDescription}}">{{item.Device_ModelDescription}}</td>
+                                        <td title="{{item.Device_ProductCode}}" alt="{{item.Device_ProductCode}}">{{item.Device_ProductCode}}</td>
+                                        <td title="{{item.Device_SerialNumber}}" alt="{{item.Device_SerialNumber}}">{{item.Device_SerialNumber}}</td>
+                                        <td title="{{getDateFormat(item.Device_LeaseRenewalStratDate)|date:'MM-dd-yyyy'}}" alt="{{getDateFormat(item.Device_LeaseRenewalStratDate)|date:'MM-dd-yyyy'}}">{{getDateFormat(item.Device_LeaseRenewalStratDate)|date:'MM-dd-yyyy'}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                        <td colspan="18" class="right-table">
+                            <table class="table table-bordered has-child table-child">
+                                <tbody>
+                                    <tr>
+                                        <td colspan="13" class="">
+                                            <table class="table table-bordered table-child">
+                                                <tbody>
+                                                    <tr ng-repeat="child in usage" class="height35">
+                                                        <td class="deviceTd">
+                                                            <span ng-if="child.Usg_Device_Status === ''">{{child.Usg_Device_Status}}</span>
+                                                            <span ng-if="child.Usg_Device_Status.includes('NRD')
+                                        || child.Usg_Device_Status.includes('Storage')
+                                        || child.Usg_Device_Status.includes('Local')
+                                        || child.Usg_Device_Status.includes('Other')">
+                                                                <select class="form-control" ng-model="child.device_Status" ng-change="DeviceStatusChange(child)">
+                                                                    <option value="NRD">NRD</option>
+                                                                    <option value="Storage">Storage</option>
+                                                                    <option value="Local">Local</option>
+                                                                    <option value="Other">Other</option>
+                                                                </select>
+                                                            </span>
+                                                            <span ng-if="child.Usg_Device_Status.includes('ARD')
+                                        || child.Usg_Device_Status.includes('IRD')">
+                                                                <select class="form-control" type="dropdown" ng-model="child.device_Status" ng-change="DeviceStatusChange(child)">
+                                                                    <option value="ARD">ARD</option>
+                                                                    <option value="IRD">IRD</option>
+                                                                </select>
+                                                            </span>
+                                                            <span ng-if="child.Usg_Device_Status.includes('NID')
+                                        || child.Usg_Device_Status.includes('Ignore')
+                                        || child.Usg_Device_Status.includes('NEW')">
+                                                                <select class="form-control" type="dropdown" ng-model="child.device_Status" ng-change="DeviceStatusChange(child)">
+                                                                    <option value="NID">NID</option>
+                                                                    <option value="Ignore">Ignore</option>
+                                                                    <option value="NEW">NEW</option>
+                                                                </select>
+                                                            </span>
+                                                        </td>
+                                                        <td>{{child.Usg_Mono}}</td>
+                                                        <td>{{child.Usg_Color}}</td>
+                                                        <td>{{child.Usg_Color_Pro}}</td>
+                                                        <td>{{child.Usg_Color_Accent}}</td>
+                                                        <td>{{child.Usg_Duplex_Sheets}}</td>
+                                                        <td>{{child.Usg_Simplex}}</td>
+                                                        <td>{{child.Usg_A3}}</td>
+                                                        <td>{{child.Usg_CopyUsage}}</td>
+                                                        <td>{{child.Usg_TotalScan}}</td>
+                                                        <td>{{child.Usg_DigitalSend}}</td>
+                                                        <td>{{child.Usg_FaxesRecorded}}</td>
+                                                        <td>{{child.Usg_TotalPages}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                        <td class="center charges-column-right-table" colspan="5" >
+                                            <table class="table table-bordered table-child">
+                                                <tbody>
+                                                    <!--<tr>
+                                                        <td colspan="5" class="text-center gray3-bg height35">{{invoice[0].Month}}{{invoice[0].Year}}</td>
+                                                    </tr>-->
+                                                    <tr ng-repeat="child in invoice" class="add-ellipsis height35">
+                                                        <td>{{child.Inv_BaseCharge}}</td>
+                                                        <td>{{child.Inv_Mono_Rate}}</td>
+                                                        <td>{{child.Inv_Color_Rate}}</td>
+                                                        <td>{{child.Inv_Color_Pro_Rate}}</td>
+                                                        <td>{{child.Inv_Color_Acc_Rate_Billed}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div><!--/---First Table Ends-->
+        <div class="responsive-table table-scnd" ng-hide="individualRowData">
+            <div class="tabletop-row ">
+                <div class="col-md-5">
+                    <div class="row">
+                        <div class="col-md-7">
+                            <h5>Location</h5>
+                        </div>
+                        <div class="col-md-5">
+                            <h5>Device Information</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="row">
+                        <div class="col-md-7">
+                            <h5>Usage</h5>
+                        </div>
+                        <div class="col-md-5">
+                            <h5>Charges</h5>
+                        </div>
+                    </div>
+                </div>               
+            </div>
+            <table class="table table-bordered has-scroll-body has-child">
+                <thead>
+                    <tr>
+                        <th colspan="12">
+                            <table class="table table-bordered table-child">
+                                <thead class="blue-bg">
+                                    <tr class="set-first-column setcolwidth-sumrytable">
+                                        <th class="text-center">
+                                            <input type="checkbox" ng-model="selectAll" ng-click="selectAllFilteredItems()" />
+                                        </th>
+                                        <th>
+                                            Area
+                                            <!--<select class="form-control" ng-model="filterList.Loc_Area" ng-change="filterInvoiceData()">
+                                                <option value="">All</option>
+                                                <option ng-repeat="item in allItems | unique: 'Loc_Area'" value="{{item.Loc_Area}}" 
+                                                        ng-hide="item.Loc_Area ==''">{{item.Loc_Area}}</option>
+                                            </select>-->
+                                            <div ng-dropdown-multiselect="" options="itemsDate" selected-model="filtermodel.Loc_Area" checkboxes="true" extra-settings="extraSettings" display-prop="'Loc_Area'" filter-invoice-data="filterInvoiceData()"></div> 
+                                        </th>
+                                        <th>
+                                            Site
+                                            <!--<select class="form-control" ng-model="filterList.Loc_Site" ng-change="filterInvoiceData()">
+                                                <option value="">All</option>
+                                                <option ng-repeat="item in allItems | unique: 'Loc_Site'" value="{{item.Loc_Site}}"
+                                                        ng-hide="item.Loc_Site ==''">{{item.Loc_Site}}</option>
+                                            </select>-->
+                                            <div ng-dropdown-multiselect="" options="itemsDate" selected-model="filtermodel.Loc_Site" checkboxes="true" extra-settings="extraSettings" display-prop="'Loc_Site'" filter-invoice-data="filterInvoiceData()"></div> 
+                                        </th>
+                                        <th>
+                                            Building
+                                            <!--<select class="form-control" ng-model="filterList.Loc_Building" ng-change="filterInvoiceData()">
+                                                <option value="">All</option>
+                                                <option ng-repeat="item in allItems | unique: 'Loc_Building'" value="{{item.Loc_Building}}"
+                                                        ng-hide="item.Loc_Building ==''" >{{item.Loc_Building}}</option>
+                                            </select>-->
+                                            <div ng-dropdown-multiselect="" options="itemsDate" selected-model="filtermodel.Loc_Building" checkboxes="true" extra-settings="extraSettings" display-prop="'Loc_Building'" filter-invoice-data="filterInvoiceData()"></div> 
+                                        </th>
+                                        <th>
+                                            Level
+                                            <!--<select class="form-control" ng-model="filterList.Loc_Level" ng-change="filterInvoiceData()">
+                                                <option value="">All</option>
+                                                <option ng-repeat="item in allItems | unique: 'Loc_Level'" value="{{item.Loc_Level}}"
+                                                        ng-hide="item.Loc_Level ==''">{{item.Loc_Level}}</option>
+                                            </select>-->
+                                            <div ng-dropdown-multiselect="" options="itemsDate" selected-model="filtermodel.Loc_Level" checkboxes="true" extra-settings="extraSettings" display-prop="'Loc_Level'" filter-invoice-data="filterInvoiceData()"></div> 
+                                        </th>
+                                        <th>
+                                            Grid
+                                            <!--<select class="form-control" ng-model="filterList.Loc_Grid" ng-change="filterInvoiceData()">
+                                                <option value="">All</option>
+                                                <option ng-repeat="item in allItems | unique: 'Loc_Grid'" value="{{item.Loc_Grid}}"
+                                                        ng-hide="item.Loc_Grid ==''">{{item.Loc_Grid}}</option>
+                                            </select>-->
+                                            <div ng-dropdown-multiselect="" options="itemsDate" selected-model="filtermodel.Loc_Grid" checkboxes="true" extra-settings="extraSettings" display-prop="'Loc_Grid'" filter-invoice-data="filterInvoiceData()"></div> 
+                                        </th>
+                                        <th>
+                                            Business Unit
+                                            <!--<select class="form-control" ng-model="filterList.Loc_Business_Unit" ng-change="filterInvoiceData()">
+                                                <option value="">All</option>
+                                                <option ng-repeat="item in allItems | unique: 'Loc_Business_Unit'" value="{{item.Loc_Business_Unit}}"
+                                                        ng-hide="item.Loc_Business_Unit ==''">{{item.Loc_Business_Unit}}</option>
+                                            </select>-->
+                                            <div ng-dropdown-multiselect="" options="itemsDate" selected-model="filtermodel.Loc_Business_Unit" checkboxes="true" extra-settings="extraSettings" display-prop="'Loc_Business_Unit'" filter-invoice-data="filterInvoiceData()"></div> 
+                                        </th>
+                                        <th>
+                                            Report Groups
+                                            <!--<select class="form-control" ng-model="filterList.Loc_Report_Groups" ng-change="filterInvoiceData()">
+                                                <option value="">All</option>
+                                                <option ng-repeat="item in allItems | unique: 'Loc_Report_Groups'" value="{{item.Loc_Report_Groups}}"
+                                                        ng-hide="item.Loc_Report_Groups ==''">{{item.Loc_Report_Groups}}</option>
+                                            </select>-->
+                                            <div ng-dropdown-multiselect="" options="itemsDate" selected-model="filtermodel.Loc_Report_Groups" checkboxes="true" extra-settings="extraSettings" display-prop="'Loc_Report_Groups'" filter-invoice-data="filterInvoiceData()"></div> 
+                                        </th>
+                                        <th class="wrapWord">
+                                            Model Description
+                                            <!--<select class="form-control" ng-model="filterList.Device_ModelDescription" ng-change="filterInvoiceData()">
+                                                <option value="">All</option>
+                                                <option ng-repeat="item in allItems | unique: 'Device_ModelDescription'" value="{{item.Device_ModelDescription}}" ng-hide="item.Device_ModelDescription ==''">{{item.Device_ModelDescription}}</option>
+                                            </select>-->
+                                            <div ng-dropdown-multiselect="" options="itemsDate" selected-model="filtermodel.Device_ModelDescription" checkboxes="true" extra-settings="extraSettings" display-prop="'Device_ModelDescription'" filter-invoice-data="filterInvoiceData()"></div>
+                                        </th>
+                                        <th>
+                                            Product Code
+                                            <!--<select class="form-control" ng-model="filterList.Device_ProductCode" ng-change="filterInvoiceData()">
+                                                <option value="">All</option>
+                                                <option ng-repeat="item in allItems | unique: 'Device_ProductCode'" value="{{item.Device_ProductCode}}" ng-hide="item.Device_ProductCode ==''">{{item.Device_ProductCode}}</option>
+                                            </select>-->
+                                            <div ng-dropdown-multiselect="" options="itemsDate" selected-model="filtermodel.Device_ProductCode" checkboxes="true" extra-settings="extraSettings" display-prop="'Device_ProductCode'" filter-invoice-data="filterInvoiceData()"></div>
+                                        </th>
+                                        <th>
+                                            Serial Number
+                                            <!--<select class="form-control" ng-model="filterList.Device_SerialNumber" ng-change="filterInvoiceData()">
+                                                <option value="">All</option>
+                                                <option ng-repeat="item in allItems | unique: 'Device_SerialNumber'" value="{{item.Device_SerialNumber}}" ng-hide="item.Device_SerialNumber ==''">{{item.Device_SerialNumber}}</option>
+                                            </select>-->
+                                            <div ng-dropdown-multiselect="" options="itemsDate" selected-model="filtermodel.Device_SerialNumber" checkboxes="true" extra-settings="extraSettings" display-prop="'Device_SerialNumber'" filter-invoice-data="filterInvoiceData()"></div>
+                                        </th>
+                                        <th>
+                                            Lease Start / Renewal Date
+                                            <!--<select class="form-control" ng-model="filterList.Device_LeaseRenewalStratDate" ng-change="filterInvoiceData()">
+                                                <option value="">All</option>
+                                                <option ng-repeat="item in allItems | unique: 'Device_LeaseRenewalStratDate'" value="{{getDateFormat(item.Device_LeaseRenewalStratDate)|date:'MM-dd-yyyy'}}" ng-hide="item.Device_LeaseRenewalStratDate ==''">{{getDateFormat(item.Device_LeaseRenewalStratDate)|date:'MM-dd-yyyy'}}</option>
+                                            </select>-->
+                                            <div ng-dropdown-multiselect="" options="itemsDate" selected-model="filtermodel.Device_LeaseRenewalStratDate" checkboxes="true" extra-settings="extraSettings" display-prop="'Device_LeaseRenewalStratDate'" filter-invoice-data="filterInvoiceData()"></div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </th>
+                        <th colspan="18" class="full-height gray-bg">
+                            <table class="table table-bordered table-child full-height">
+                                <thead class="gray-bg full-height">
+                                    <tr>
+                                        <th class="deviceTh text-center">Device <br>Status</th>
+                                        <th>Mono</th>
+                                        <th>Color</th>
+                                        <th>Color Pro</th>
+                                        <th>Color Accent</th>
+                                        <th>Duplex Sheets</th>
+                                        <th>Simplex</th>
+                                        <th>11x17 A3</th>
+                                        <th>Copy Usage</th>
+                                        <th>Total Scan <br>Usage</th>
+                                        <th>Digital Send <br>Usage</th>
+                                        <th>Faxes Rec'd</th>
+                                        <th>Total Pages</th>
+                                        <th>Base Charge</th>
+                                        <th>Mono Rate</th>
+                                        <th>Color Rate</th>
+                                        <th>Color Pro Rate</th>
+                                        <th>Color Acc Rate</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="12">
+                            <table class="table table-bordered table-child has-scroll-body">
+                                <tbody class="scroll-tbody" ng-style="{height: setTableHeight + 'px'}">
+                                    <tr ng-repeat="item in items" ng-click="selectRow(item, $index)" class="set-first-column add-ellipsis setcolwidth-sumrytable" ng-class="{ selectedClick: $index==rowNumber}">
+                                        <td><input type="checkbox" ng-model="item.selected" value="{{$index+1}}" /></td>
+                                        <td title="{{item.Loc_Area}}" alt="{{item.Loc_Area}}">{{item.Loc_Area}}</td>
+                                        <td title="{{item.Loc_Site}}" alt="{{item.Loc_Site}}">{{item.Loc_Site}}</td>
+                                        <td title="{{item.Loc_Building}}" alt="{{item.Loc_Building}}">{{item.Loc_Building}}</td>
+                                        <td title="{{item.Loc_Level}}" alt="{{item.Loc_Level}}">{{item.Loc_Level}}</td>
+                                        <td title="{{item.Loc_Grid}}" alt="{{item.Loc_Grid}}">{{item.Loc_Grid}}</td>
+                                        <td title="{{item.Loc_Business_Unit}}" alt="{{item.Loc_Business_Unit}}">{{item.Loc_Business_Unit}}</td>
+                                        <td title="{{item.Loc_Report_Groups}}" alt="{{item.Loc_Report_Groups}}">{{item.Loc_Report_Groups}}</td>
+                                        <td title="{{item.Device_ModelDescription}}" alt="{{item.Device_ModelDescription}}">{{item.Device_ModelDescription}}</td>
+                                        <td title="{{item.Device_ProductCode}}" alt="{{item.Device_ProductCode}}">{{item.Device_ProductCode}}</td>
+                                        <td title="{{item.Device_SerialNumber}}" alt="{{item.Device_SerialNumber}}">{{item.Device_SerialNumber}}</td>
+                                        <td title="{{getDateFormat(item.Device_LeaseRenewalStratDate)|date:'MM-dd-yyyy'}}" alt="{{getDateFormat(item.Device_LeaseRenewalStratDate)|date:'MM-dd-yyyy'}}">{{getDateFormat(item.Device_LeaseRenewalStratDate)|date:'MM-dd-yyyy'}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                        <td colspan="18">
+                            <table class="table table-bordered table-child has-child has-scroll-body">
+                                <tbody class="scroll-tbody" ng-style="{height: setTableHeight + 'px'}">
+                                    <!--<tr class="bottom-line-none">-->
+                                    <tr>
+                                        <td colspan="13" class="center">
+                                            <table class="table table-bordered table-child" ng-repeat="child in wipeUsgModel">
+                                                <tbody class="">
+                                                    <tr class="">
+                                                        <td colspan="13" class="text-center gray2-bg">{{child.Month}}{{child.Year}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="deviceTd">
+                                                            <span ng-if="child.Usg_Device_Status === ''">{{child.Usg_Device_Status}}</span>
+                                                            <span ng-if="child.Usg_Device_Status.includes('NRD')
+                                            || child.Usg_Device_Status.includes('Storage')
+                                            || child.Usg_Device_Status.includes('Local')
+                                            || child.Usg_Device_Status.includes('Other')">
+                                                                <select class="form-control" ng-model="child.device_Status" ng-change="DeviceStatusChange(child)">
+                                                                    <option value="NRD">NRD</option>
+                                                                    <option value="Storage">Storage</option>
+                                                                    <option value="Local">Local</option>
+                                                                    <option value="Other">Other</option>
+                                                                </select>
+                                                            </span>
+                                                            <span ng-if="child.Usg_Device_Status.includes('ARD')
+                                            || child.Usg_Device_Status.includes('IRD')">
+                                                                <select class="form-control" type="dropdown" ng-model="child.device_Status" ng-change="DeviceStatusChange(child)">
+                                                                    <option value="ARD">ARD</option>
+                                                                    <option value="IRD">IRD</option>
+                                                                </select>
+                                                            </span>
+                                                            <span ng-if="child.Usg_Device_Status.includes('NID')
+                                            || child.Usg_Device_Status.includes('Ignore')
+                                            || child.Usg_Device_Status.includes('NEW')">
+                                                                <select class="form-control" type="dropdown" ng-model="child.device_Status" ng-change="DeviceStatusChange(child)">
+                                                                    <option value="NID">NID</option>
+                                                                    <option value="Ignore">Ignore</option>
+                                                                    <option value="NEW">NEW</option>
+                                                                </select>
+                                                            </span>
+
+                                                        </td>
+
+                                                        <td>{{child.Usg_Mono}}</td>
+                                                        <td>{{child.Usg_Color}}</td>
+                                                        <td>{{child.Usg_Color_Pro}}</td>
+                                                        <td>{{child.Usg_Color_Accent}}</td>
+                                                        <td>{{child.Usg_Duplex_Sheets}}</td>
+                                                        <td>{{child.Usg_Simplex}}</td>
+                                                        <td>{{child.Usg_A3}}</td>
+                                                        <td>{{child.Usg_CopyUsage}}</td>
+                                                        <td>{{child.Usg_TotalScan}}</td>
+                                                        <td>{{child.Usg_DigitalSend}}</td>
+                                                        <td>{{child.Usg_FaxesRecorded}}</td>
+                                                        <td>{{child.Usg_TotalPages}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                        <td colspan="5" class="center">
+                                            <table class="table table-bordered table-child" ng-repeat="child in wipeInvModel">
+                                                <tbody>
+                                                    <tr class="text-center">
+                                                        <td colspan="5" class="text-center gray3-bg">{{child.Month}}{{child.Year}}</td>
+                                                    </tr>
+                                                    <tr class="add-ellipsis">
+                                                        <td>{{child.Inv_BaseCharge}}</td>
+                                                        <td>{{child.Inv_Mono_Rate}}</td>
+                                                        <td>{{child.Inv_Color_Rate}}</td>
+                                                        <td>{{child.Inv_Color_Pro_Rate}}</td>
+                                                        <td>{{child.Inv_Color_Acc_Rate_Billed}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div><!--/---Second Table Ends-->
+    </div>
+    <!--<div class="row pagination">
+        <div class="col-md-2">
+            <select ng-model="pageSize" class="">
+                <option value="5">05</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+            </select>
+        </div>
+        <div class="col-md-10 text-center">
+            <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+                Previous
+            </button>
+            {{currentPage+1}}/{{numberOfPages()}}
+            <button ng-disabled="currentPage >= getData().length/pageSize - 1" ng-click="currentPage=currentPage+1">
+                Next
+            </button>
+            {{allItems.length}}
+        </div>
+    </div>-->
+</div>
+

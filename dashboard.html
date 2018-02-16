@@ -1,0 +1,46 @@
+﻿<div class="row-panel" ng-controller="dashboardController">
+    <div class="container-fluid report-container">
+        <h5>Dashboard</h5>
+        <div>
+            <div class="col-md-12 service-section">
+                <div class="col-md-2">
+                    <!--<div class="row">
+                        <button class="btn btn-blue width170">Instructions</button>
+                    </div>-->
+                    <div class="row">
+                        <a href="http://bi-etl-02.fpe.boi.rd.hpicorp.net/PD-HelpFAQ/Open" target="_blank"><button class="btn btn-blue width170">Help & FAQ</button></a>
+                    </div>
+                    <div class="row ptop15">
+                        <button class="btn btn-blue width170">Support</button>
+                    </div>
+                    <div class="row ptop15">
+                        <button class="btn btn-blue width170" ng-disabled="!fileSelected" ng-click="navigate('main.ProcessInvoiceTable')">Invoice & Usage Summary</button>
+                    </div>
+                    <div class="row ptop15">
+                        <button class="btn btn-blue width170" ng-disabled="!fileSelected" ng-click="wipeAllInformation()">Wipe all information</button>
+                    </div>
+                </div>
+                <div class="row col-md-10">
+                    <div class="row">
+                        <div class="alert alert-danger" ng-if="errorMsg">
+                            <strong>Error:</strong> Not able to process this account.
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2 text-right">
+                            Select Account
+                        </div> 
+                        <div class="col-md-4">
+                            <select class="form-control custom-form-control height30" ng-model="actionFiles">
+                                <option ng-repeat="file in accountFiles" value="{{file}}">{{file.UserAccFileName}}</option>
+                            </select> 
+                        </div>    
+                        <div class="col-md-1">
+                            <button class="btn btn-blue" ng-click="createFile()">Go</button>
+                        </div>            
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

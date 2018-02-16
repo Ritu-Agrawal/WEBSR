@@ -1,0 +1,127 @@
+﻿<div class="container holiday-container"> <!--ng-controller="infoSowCtrl as sowCtrl">-->
+    <div class="row holiday-block-row">
+        <div class="col-md-7">
+            <div class="holiday-table-block">
+                <table class="table table-bordered table-holiday">
+                    <thead class="blue-thead">
+                        <tr>
+                            <th colspan="5">Holiday & Business Closings Table</th>
+                        </tr>
+                        <tr>
+                            <th>Date Serial Value</th>
+                            <th>Date</th>
+                            <th>Country</th>
+                            <th>Holiday</th>
+                            <th class="width110"></th>
+                        </tr> 
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="day in hdayCtrl.holidaysList">
+                            <td>
+                                <span ng-show="!day.editable">{{day.DateSerialValue}}</span>
+                                <input type="text" class="form-control custom-form-control" ng-show="day.editable" ng-model="hdayCtrl.oldRow.DateSerialValue" />
+                            </td>
+                            <td>
+                                <span ng-show="!day.editable">{{day.Date | date:'MMMM dd, yyyy'}}</span>
+                                <input type="text" class="form-control custom-form-control" ng-show="day.editable" ng-model="hdayCtrl.oldRow.Date" placeholder="Select date" uib-datepicker-popup="MMMM dd, yyyy" datepicker-options="options" is-open="isOpen1" ng-click="isOpen1=true" />
+                            </td>
+                            <td>
+                                <span ng-show="!day.editable">{{day.Country}}</span>
+                                <input type="text" class="form-control custom-form-control" ng-show="day.editable" ng-model="hdayCtrl.oldRow.Country" />
+                            </td>
+                            <td>
+                                <span ng-show="!day.editable">{{day.Holiday}}</span>
+                                <input type="text" class="form-control custom-form-control" ng-show="day.editable" ng-model="hdayCtrl.oldRow.Holiday" />
+                            </td>
+                            <td class="action-block width90">
+                                <button ng-show="day.editable" type="submit" ng-click="hdayCtrl.updateDayRow(day, day.id)" ng-disabled="!hdayCtrl.oldRow.DateSerialValue || !hdayCtrl.oldRow.Date || !hdayCtrl.oldRow.Country || !hdayCtrl.oldRow.Holiday">Save</button>
+                                <span ng-show="day.editable" ng-click="hdayCtrl.resetDayRow(day)" class="devider">Cancel</span>
+                                <span ng-show="!day.editable" ng-click="hdayCtrl.editDayRow(day)">Edit</span>
+                                <span ng-show="!day.editable" class="devider" ng-click="hdayCtrl.deleteDayRow(day, day.id)">Delete</span>
+                            </td>
+                        </tr>
+                        <tr ng-show="hdayCtrl.showAddaRow">
+                            <td>
+                                <input type="text" class="form-control custom-form-control" ng-model="hdayCtrl.addRow.DateSerialValue" />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control custom-form-control" ng-model="hdayCtrl.addRow.Date" uib-datepicker-popup="MMMM dd, yyyy" datepicker-options="options" is-open="isOpen2" ng-click="isOpen2=true" />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control custom-form-control" ng-model="hdayCtrl.addRow.Country" />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control custom-form-control" ng-model="hdayCtrl.addRow.Holiday" />
+                            </td>
+                            <td class="action-block width90">
+                                <button type="submit" ng-click="hdayCtrl.addaDayRow(hdayCtrl.addRow)" ng-disabled="!hdayCtrl.addRow.DateSerialValue || !hdayCtrl.addRow.Date || !hdayCtrl.addRow.Country || !hdayCtrl.addRow.Holiday">Save</button>
+                                <span ng-click="hdayCtrl.showAddDayRow('no')" class="devider">Cancel</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="text-right">
+                    <button class="btn btn-blue" type="submit" ng-click="hdayCtrl.showAddDayRow('add')">+ Add Row</button>
+                </div>                
+            </div>            
+        </div>
+        <div class="col-md-5">
+            <div class="table-responsive">
+                <table class="table table-bordered table-holiday">
+                    <thead class="gray-thead">
+                        <tr>
+                            <th colspan="4">Service Zone Table</th>
+                        </tr>
+                        <tr>
+                            <th>Postal Code</th>
+                            <th>Area</th>
+                            <th>Zone</th> 
+                            <th class="width110"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="zone in hdayCtrl.ServiceZoneList">
+                            <td>
+                                <span ng-show="!zone.editable">{{zone.PostalCode}}</span>
+                                <input type="text" class="form-control custom-form-control" ng-show="zone.editable" ng-model="hdayCtrl.oldZoneRow.PostalCode" />
+                            </td>
+                            <td>
+                                <span ng-show="!zone.editable">{{zone.Area}}</span>
+                                <input type="text" class="form-control custom-form-control" ng-show="zone.editable" ng-model="hdayCtrl.oldZoneRow.Area" />
+                            </td>
+                            <td>
+                                <span ng-show="!zone.editable">{{zone.Zone}}</span>
+                                <input type="text" class="form-control custom-form-control" ng-show="zone.editable" ng-model="hdayCtrl.oldZoneRow.Zone" />
+                            </td> 
+                            <td class="action-block width90">
+                                <button ng-show="zone.editable" type="submit" ng-click="hdayCtrl.updateZoneRow(zone, zone.id)" ng-disabled="!hdayCtrl.oldZoneRow.PostalCode || !hdayCtrl.oldZoneRow.Area || !hdayCtrl.oldZoneRow.Zone">Save</button>
+                                <span ng-show="zone.editable" ng-click="hdayCtrl.resetZoneRow(zone)" class="devider">Cancel</span>
+                                <span ng-show="!zone.editable" ng-click="hdayCtrl.editZoneRow(zone)">Edit</span>
+                                <span ng-show="!zone.editable" class="devider" ng-click="hdayCtrl.deleteZoneRow(zone, zone.id)">Delete</span>
+                            </td>
+                        </tr>
+                        <tr ng-show="hdayCtrl.showzonerow">
+                            <td>
+                                <input type="text" class="form-control custom-form-control" ng-model="hdayCtrl.addZRow.PostalCode" />
+                            </td> 
+                            <td>
+                                <input type="text" class="form-control custom-form-control" ng-model="hdayCtrl.addZRow.Area" />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control custom-form-control" ng-model="hdayCtrl.addZRow.Zone" />
+                            </td>
+                            <td class="action-block width90">
+                                <button type="submit" ng-click="hdayCtrl.addZoneRowUpdate(hdayCtrl.addZRow)" ng-disabled="!hdayCtrl.addZRow.PostalCode || !hdayCtrl.addZRow.Area || !hdayCtrl.addZRow.Zone">Save</button>
+                                <span ng-click="hdayCtrl.showAddZoneRow('no')" class="devider">Cancel</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="text-right">
+                    <button class="btn btn-gray" type="submit" ng-click="hdayCtrl.showAddZoneRow('add')">+ Add Row</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

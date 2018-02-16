@@ -1,0 +1,589 @@
+﻿<div class="row-panel">
+    <div class="container-fluid ptop15">
+        <div ng-controller="scrubbCompController" ng-init="loadScurbberData()">
+            <div class="row">
+                <div class="col-md-11 fade in" ng-show="collapseFlag">
+                    <div class="btn-broup">
+                        <a class="btn" data-toggle="pill" href="" data-target="#comp" ng-class="{'btn-blue': scrubTab.isSelected,'btn-gray':!scrubTab.isSelected}" ng-click="scrubTab.isSelected = true" >Company &amp; Product Info</a>
+                        <a class="btn" data-toggle="pill" href="" data-target="#summary" ng-class="{'btn-blue': !scrubTab.isSelected,'btn-gray':scrubTab.isSelected}" ng-click="scrubTab.isSelected = false">Quick Summary</a>
+                    </div>
+                </div>
+                <div class="col-md-11" ng-show="!collapseFlag">                    
+                </div>
+                <div class="col-md-1 text-right openTabContent">
+                    <button class="btn btn-collapse" type="button" data-toggle="collapse" data-target="#compSummaryAccordion" aria-expanded="true" aria-controls="collapseExample" ng-click="collapseFlag = !collapseFlag">
+                        <i class="glyphicon glyphicon-minus"></i>
+                        <i class="glyphicon glyphicon-plus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="tab-content panel-collapse collapse in" id="compSummaryAccordion">
+                <div id="comp" class="tab-pane fade in active">
+                    <div class="company-container">
+                        <div class="row minHeight">
+                            <div class="col-md-6">
+                                <h6>Company Information </h6>
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <div class="ptop15">
+                                            Company Name - <b>{{scrubberRowData.CompanyName}}</b>
+                                        </div>
+                                        <div class="ptop15">
+                                            Street Address -  <b>{{scrubberRowData.Address}}</b>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="col-md-7">
+                                        <div class="ptop15">
+                                            City, State, Zip &amp; Country - <b>{{scrubberRowData.City}}, {{scrubberRowData.State}}<span ng-if="scrubberRowData.PostalCode !== ''">,</span> {{scrubberRowData.PostalCode}} ({{scrubberRowData.Country}})</b>
+                                        </div>
+                                        <div class="ptop15">
+                                            Contact Name &amp; Number - <b>{{scrubberRowData.CustomerName}} {{scrubberRowData.PhoneNumber}}</b>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>Product  Information </h6>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="ptop15">
+                                            Product Code - <b>{{scrubberRowData.ProductCode}}</b>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="ptop15">
+                                            Device Description -  <b>{{scrubberRowData.ProductDescription}}</b>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="ptop15">
+                                            Serial Number - <b>{{scrubberRowData.SerialNumber}}</b>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row ptop15">
+                            <div class="col-md-12 responsive-table">
+                                <table class="table table-bordered table-hover minHeight">
+                                    <thead class="comp-table-head-gray">
+                                        <tr>
+                                            <th title="A '~' tilda indicates a sub-case.">Case Title</th>
+                                            <th>Date & Time Received</th>
+                                            <th title="A '~' tilda indicates a sub-case.">Case Summary</th>
+                                            <th colspan="2" nowrap>
+                                                <div class="left">Symptom Code</div>
+                                                <div class="right">?</div></th>
+                                            <th colspan="2" nowrap>
+                                                <div class="left"title="The Component Code is only for your reference. It is not needed to continue processing the service data. All Component Codes that are left blank will default to 'Other, Unknown'.">Component Code</div>
+                                                <div class="right">?</div>
+                                            </th>
+                                            <th colspan="2" nowrap>
+                                                <div class="left" title="Use CO in product repairs requiring parts replacement as either an onsite or bench repair service. It is very important that this Repair Class Code only be used when part(s) replacement is occuring, and the part was acquired through normal GPSC processes. Refer to CP if part was not acquired through normal GPSC processes. Refer to PP(Phone Asset with Parts) if having part(s) shipped to a customer. Refer CA(Courier Assist) if you, the CE, deliver part(s) as a customer self repair event. ">Repair Code</div>
+                                                <div class="right">?</div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="comp-table-body-gray">
+                                        <tr>
+                                            <td>{{scrubberRowData.CaseTitle}}</td>
+                                            <td nowrap>{{scrubberRowData.CallReceivedDate | date:'fullDate'}}</td>
+                                            <td><span title="{{scrubberRowData.CaseSummary}}">{{scrubberRowData.CaseSummary}}</span></td>
+                                            <td>{{scrubberRowData.CurrentSymptomCode}}</td>
+                                            <td>
+                                                <select class="form-control custom-form-control" ng-model="scrubberRowData.CurrentSymptomCode" 
+                                                        ng-options="sc.Code as sc.Description for sc in SymptomCodeData" ng-change="changeSymptomCode(scrubberRowData.CurrentSymptomCode)">
+                                                    <option value="" ng-if="false"></option>
+                                                </select>
+                                            </td>
+                                            <td>{{scrubberRowData.CurrentComponentCode}}</td>
+                                            <td>
+                                                <select class="form-control custom-form-control" ng-model="scrubberRowData.CurrentComponentCode"
+                                                        ng-options="sc.Code as sc.Description for sc in ComponentCodeData" ng-change="changeComponentCode(scrubberRowData.CurrentComponentCode)">
+                                                    <option value="" ng-if="false"></option>
+                                                </select>
+                                            </td>
+                                            <td>{{scrubberRowData.RepairCode}}</td>
+                                            <td title="{{scrubberRowData.RepairDescription}}">{{scrubberRowData.RepairDescription}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="summary" class="tab-pane fade">
+                    <div class="company-container">
+                        <div class="row ptop15">
+                            <div class="col-md-12 responsive-table">
+                                <table class="table table-bordered text-center">
+                                    <thead>
+                                        <tr>
+                                            <th class="width20per bdNone">Quick Summary by Service Provider</th>
+                                            <th class="quick-table-header-blue text-center">HP Onsite</th>
+                                            <th class="quick-table-header-blue text-center">Partner Onsite</th>
+                                            <th class="quick-table-header-blue text-center" ng-class="{ 'bg-grey-disabled': onsiteSLA==true}">Remote</th>
+                                            <th class="quick-table-header-blue text-center">Scheduled</th>
+                                            <th class="quick-table-header-blue text-center">Proactive</th>
+                                            <th class="quick-table-header-blue text-center">Totals</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-body-gray">
+                                        <tr>
+                                            <td class="quick-table-row-blue text-left">Total Number of Service Incidents</td>
+                                            <td>{{SummaryData[0].HPOnsite}}</td>
+                                            <td>{{SummaryData[0].PartnerOnsite}}</td>
+                                            <td ng-class="{ 'bg-grey-disabled': onsiteSLA==true}">{{SummaryData[0].Remote}}</td>
+                                            <td>{{SummaryData[0].Scheduled}}</td>
+                                            <td>{{SummaryData[0].Proactive}}</td>
+                                            <td class="quick-table-column-gray">{{SummaryData[0].Totals}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="quick-table-row-blue text-left">Total “SLA Met” Calls</td>
+                                            <td>{{SummaryData[1].HPOnsite}}</td>
+                                            <td>{{SummaryData[1].PartnerOnsite}}</td>
+                                            <td ng-class="{ 'bg-grey-disabled': onsiteSLA==true}">{{SummaryData[1].Remote}}</td>
+                                            <td>{{SummaryData[1].Scheduled}}</td>
+                                            <td>{{SummaryData[1].Proactive}}</td>
+                                            <td class="quick-table-column-gray">{{SummaryData[1].Totals}}</td>
+                                        </tr>
+                                        <tr class="quick-table-row-gray">
+                                            <td class="text-left">SLA “Met” Percentage </td>
+                                            <td>{{SummaryData[2].HPOnsite}}</td>
+                                            <td>{{SummaryData[2].PartnerOnsite}}</td>
+                                            <td ng-class="{ 'bg-grey-disabled': onsiteSLA==true}">{{SummaryData[2].Remote}}</td>
+                                            <td>{{SummaryData[2].Scheduled}}</td>
+                                            <td>{{SummaryData[2].Proactive}}</td>
+                                            <td>{{SummaryData[2].Totals}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="quick-table-row-blue text-left"> Average “Call to Response” (Hrs)</td>
+                                            <td>{{SummaryData[3].HPOnsite}}</td>
+                                            <td>{{SummaryData[3].PartnerOnsite}}</td>
+                                            <td>{{SummaryData[3].Remote}}</td>
+                                            <td>{{SummaryData[3].Scheduled}}</td>
+                                            <td>{{SummaryData[3].Proactive}}</td>
+                                            <td class="quick-table-column-gray">{{SummaryData[3].Totals | number :2}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="quick-table-row-blue text-left">Average “Response to Repair” (Hrs)</td>
+                                            <td>{{SummaryData[4].HPOnsite}}</td>
+                                            <td>{{SummaryData[4].PartnerOnsite}}</td>
+                                            <td ng-class="{ 'bg-grey-disabled': onsiteSLA==true}">{{SummaryData[4].Remote}}</td>
+                                            <td>{{SummaryData[4].Scheduled}}</td>
+                                            <td>{{SummaryData[4].Proactive}}</td>
+                                            <td class="quick-table-column-gray">{{SummaryData[4].Totals | number :2}}</td>
+                                        </tr>
+                                        <tr class="quick-table-row-gray">
+                                            <td class="text-left">Average “Call to Repair” (Hrs)</td>
+                                            <td>{{SummaryData[5].HPOnsite}}</td>
+                                            <td>{{SummaryData[5].PartnerOnsite}}</td>
+                                            <td ng-class="{ 'bg-grey-disabled': onsiteSLA==true}">{{SummaryData[5].Remote}}</td>
+                                            <td>{{SummaryData[5].Scheduled}}</td>
+                                            <td>{{SummaryData[5].Proactive}}</td>
+                                            <td>{{SummaryData[5].Totals | number :2}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="row merge-row">
+                                    <div class="col-md-7">*The Quick Summary shows the results of the visible data</div>
+                                    <div class="col-md-4 merge-block">
+                                        <span class="lines"></span>
+                                        <span class="btn btn-light">
+                                        <input type="checkbox" ng-click="SLAChanged()" ng-model="onsiteSLA"/>Onsite SLAs Only</span>
+                                    </div> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center report-container">
+                    <h5>Report date Span: <b>{{ScrubberReportDateRange}}</b></h5>
+                </div>
+                <div class="col-md-12 btn-blocks ptop15">
+                    <span class="btn scrub-filter-btn" ng-class="{'btn-blue':selectedFilter == 'All','btn-gray':selectedFilter != 'All'}" title="Show All Case IDs" ng-click="filterCase('All')">Show All Case IDs <br />
+                    {{ScrubberReportFilterData.AllCaseIDs}}</span>
+                    <span class="btn scrub-filter-btn" ng-class="{'btn-blue':selectedFilter == 'Unprocessed','btn-gray':selectedFilter != 'Unprocessed'}" title="Show 'Unprocessed' Case IDs" ng-click="(ScrubberReportFilterData.Unprocessed==0)?'':filterCase('Unprocessed')" ng-disabled="ScrubberReportFilterData.Unprocessed==0">Unprocessed <br />{{ScrubberReportFilterData.Unprocessed}}</span>
+                    <span class="btn scrub-filter-btn" ng-class="{'btn-blue':selectedFilter == 'Processed','btn-gray':selectedFilter != 'Processed'}" title="Show 'Processed' Case IDs" ng-click="(ScrubberReportFilterData.Processed==0)?'':filterCaseData('Processed')"
+                          ng-disabled="ScrubberReportFilterData.Processed==0">Processed <br />{{ScrubberReportFilterData.Processed}}%</span>
+                    <span class="btn scrub-filter-btn" ng-class="{'btn-blue':selectedFilter == 'Onsite SLAs','btn-gray':selectedFilter != 'Onsite SLAs'}" title="Show 'Onsite SLAs' Case IDs" 
+                          ng-click="(ScrubberReportFilterData.OnsiteSLA==0)?'':filterCaseData('Onsite SLAs')">Onsite SLAs <br />{{ScrubberReportFilterData.OnsiteSLA}}</span>
+                    <span class="btn scrub-filter-btn" ng-class="{'btn-blue':selectedFilter == 'Sched / Proactive','btn-gray':selectedFilter != 'Sched / Proactive'}" title="Show 'Sched / Proactive' Case IDs" style="min-width:120px" 
+                          ng-click="(ScrubberReportFilterData.SchedProactive==0)?'':filterCaseData('Sched / Proactive')" ng-disabled="ScrubberReportFilterData.SchedProactive==0">Sched / Proactive <br />{{ScrubberReportFilterData.SchedProactive}}</span>
+                    <span class="btn scrub-filter-btn" ng-class="{'btn-blue':selectedFilter == 'Consumables','btn-gray':selectedFilter != 'Consumables'}" title="Show 'Consumables'" ng-click="(ScrubberReportFilterData.Consumables==0)?'':filterCaseData('Consumables')" ng-disabled="ScrubberReportFilterData.Consumables==0">Consumables <br />{{ScrubberReportFilterData.Consumables}}</span>
+                    <span class="btn scrub-filter-btn" ng-class="{'btn-blue':selectedFilter == 'RTM','btn-gray':selectedFilter != 'RTM'}" title="Show Case IDs with 'Reporting Times Missing'" ng-click="(ScrubberReportFilterData.RTM==0)?'':filterCaseData('RTM')" ng-disabled="ScrubberReportFilterData.RTM==0">RTM <br />{{ScrubberReportFilterData.RTM}}</span>
+                </div>
+            </div>
+            <div class="row ptop40">
+                <div class="col-md-12">
+                    <div class="col-md-7">
+                        <div class="row text-center">
+                            <div class="scrubber_product_details">
+                                <table class="table table-bordered table">
+                                    <thead class="blue-bg comp-table-header">
+                                        <tr>
+                                            <th colspan="6" class="prod_table">Product Details</th>
+                                            <th colspan="2" class="status_table">Status</th>
+                                            <th class="leftbar"></th>
+                                        </tr>
+                                        <tr>
+                                            <th>Case Id</th>
+                                            <th class="wrapWord">Product</br> Code</th>
+                                            <th class="wrapWord">Serial</br> Number</th>
+                                            <th>Address</th>
+                                            <th>City</th>
+                                            <th>Country</th>
+                                            <th>Service Flag</th>
+                                            <th>SLA Status</th>
+                                            <th class="leftbar"></th>
+                                        </tr>
+                                        <tr>
+                                            <th>
+                                                <select class="form-control" ng-model="filterList.CaseID" ng-change="filterScrubbData()">
+                                                    <option value="">All</option>
+                                                    <option ng-repeat="item in CompleteScrubberData | unique: 'CaseID'" value="{{item.CaseID}}" ng-hide="item.CaseID ==''">{{item.CaseID}}</option>
+                                                </select>
+                                            </th>
+                                            <th>
+                                                <select class="form-control" ng-model="filterList.ProductCode" ng-change="filterScrubbData()">
+                                                    <option value="">All</option>
+                                                    <option ng-repeat="item in CompleteScrubberData | unique: 'ProductCode'" value="{{item.ProductCode}}" ng-hide="item.ProductCode ==''">{{item.ProductCode}}</option>
+                                                </select>
+                                            </th>
+                                            <th>
+                                                <select class="form-control" ng-model="filterList.SerialNumber" ng-change="filterScrubbData()">
+                                                    <option value="">All</option>
+                                                    <option ng-repeat="item in CompleteScrubberData | unique: 'SerialNumber'" value="{{item.SerialNumber}}" ng-hide="item.SerialNumber ==''">{{item.SerialNumber}}</option>
+                                                </select>
+                                            </th>
+                                            <th>
+                                                <select class="form-control" ng-model="filterList.Address" ng-change="filterScrubbData()">
+                                                    <option value="">All</option>
+                                                    <option ng-repeat="item in CompleteScrubberData | unique: 'Address'" value="{{item.Address}}" ng-hide="item.Address ==''">{{item.Address}}</option>
+                                                </select>
+                                            </th>
+                                            <th>
+                                                <select class="form-control" ng-model="filterList.City" ng-change="filterScrubbData()">
+                                                    <option value="">All</option>
+                                                    <option ng-repeat="item in CompleteScrubberData | unique: 'City'" value="{{item.City}}" ng-hide="item.City ==''">{{item.City}}</option>
+                                                </select>
+                                            </th>
+                                            <th>
+                                                <select class="form-control" ng-model="filterList.State" ng-change="filterScrubbData()">
+                                                    <option value="">All</option>
+                                                    <option ng-repeat="item in CompleteScrubberData | unique: 'State'" value="{{item.State}}" ng-hide="item.State ==''">{{item.State}}</option>
+                                                </select>
+                                            </th>
+                                            <th>
+                                                <select class="form-control" ng-model="filterList.ServiceFlag" ng-change="filterScrubbData()">
+                                                    <option value="">All</option>
+                                                    <option ng-repeat="item in CompleteScrubberData | unique: 'ServiceFlag'" value="{{item.ServiceFlag}}" ng-hide="item.ServiceFlag ==''">{{item.ServiceFlag}}</option>
+                                                </select>
+                                            </th>
+                                            <th>
+                                                <select class="form-control" ng-model="filterList.SLAStatus" ng-change="filterScrubbData()">
+                                                    <option value="">All</option>
+                                                    <option ng-repeat="item in CompleteScrubberData | unique: 'SLAStatus'" value="{{item.SLAStatus}}" ng-hide="item.SLAStatus ==''">{{item.SLAStatus}}</option>
+                                                </select>
+                                            </th>
+                                            <th class="leftbar"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="data in ServiceReportScrubberData" ng-click="selectRow(data, $index)" ng-class="{ 'active-row': $index==rowNumber}">
+                                            <td>{{data.CaseID}}</td>
+                                            <td>{{data.ProductCode}}</td>
+                                            <td>{{data.SerialNumber}}</td>
+                                            <td class="wrapWord">{{data.Address}}</td>
+                                            <td>{{data.City}}</td>
+                                            <td>{{data.State}}</td>
+                                            <td><select class="form-control" ng-model="data.ServiceFlag"
+                                                        ng-change=setServiceFlag(data.ServiceFlag,data,rowNumber)
+                                                        ng-if="(data.ServiceFlag !=='Proactive' && data.ServiceFlag !=='Scheduled' && data.ServiceFlag !=='Cons Ord' && data.ServiceFlag !=='RTM')"
+                                                        ng-class="(data.CurrentSymptomCode === null || data.ServiceFlag =='Need SLA')?'scrubFlagRed':''">
+                                                    <option ng-repeat="sla in SLASettingsData" class="scrubFlagblack" value="{{sla.SLASettings}}">{{sla.SLASettings}}</option>
+                                                </select>
+                                                <select class="form-control" ng-model="data.ServiceFlag"
+                                                        ng-change=setServiceFlag(data.ServiceFlag,data,rowNumber)
+                                                        ng-if="(data.ServiceFlag =='Proactive')">
+                                                    <option value="Proactive" disabled selected>Proactive</option>
+                                                    <option value="Delete">Delete</option>
+                                                </select>
+                                                <select class="form-control" ng-model="data.ServiceFlag"
+                                                        ng-change=setServiceFlag(data.ServiceFlag,data,rowNumber)
+                                                        ng-if="(data.ServiceFlag =='Scheduled')">
+                                                    <option value="Scheduled" disabled selected>Scheduled</option>
+                                                    <option value="Reset Raw">Reset Raw</option>
+                                                    <option value="Delete">Delete</option>
+                                                </select>
+                                                <select class="form-control" ng-model="data.ServiceFlag"
+                                                        ng-change=setServiceFlag(data.ServiceFlag,data,rowNumber)
+                                                        ng-if="(data.ServiceFlag =='Cons Ord')">
+                                                    <option value="Cons Ord" disabled selected>Cons Ord</option>
+                                                    <option value="RTM">RTM</option>
+                                                    <option value="Delete">Delete</option>
+                                                </select>
+                                                <select class="form-control" ng-model="data.ServiceFlag"
+                                                        ng-change=setServiceFlag(data.ServiceFlag,data,rowNumber)
+                                                        ng-if="(data.ServiceFlag =='RTM')">
+                                                    <option value="RTM" disabled selected>RTM</option>
+                                                    <option value="Cons Ord">Cons Ord</option>
+                                                    <option value="Delete">Delete</option>
+                                                </select>
+                                            </td>
+                                            <td>{{data.SLAStatus}}</td>
+                                            <td class="leftbar">
+                                                <div class="glyphicon glyphicon-triangle-right" ng-if="$index==rowNumber"></div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>         
+                        </div>
+                     </div>
+                    <div class="pleft0 pright0 col-md-5"> 
+                        <div class="text-center comp-panel scrubber_product_details">
+                            <div class="panel panel-default">
+                                <div class="panel-heading gray" role="tab" id="incomingCallHd">
+                                    <h5 class="panel-title" data-toggle="collapse" data-target="#incomingCall" aria-expanded="true" aria-controls="incomingCall">
+                                        Incoming Call Information
+                                    </h5>
+                                </div>
+                                <div id="incomingCall" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                                    <div class="panel-body p0">
+                                        <div class="responsive-table">
+                                            <table class="table table-bordered">
+                                                <thead class="gray">
+                                                    <tr>
+                                                        <th>Call Received Date</th>
+                                                        <th>Response or Repair </br>CompleteDeadline</th>
+                                                        <th>Response Time</th>
+                                                        <th>Repair Complete time</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>{{scrubberRowData.CallReceivedDate | date:'MM-dd-yy- HH:mm EEE'}}</td>
+                                                        <td>{{scrubberRowData.ResponseOrRepairComplete | date:'MM-dd-yy- HH:mm EEE'}}</td>
+                                                        <td>{{scrubberRowData.ReponseTime | date:'MM-dd-yy- HH:mm EEE'}}</td>
+                                                        <td>{{scrubberRowData.RepairCompleteTime | date:'MM-dd-yy- HH:mm EEE'}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!--Panel-->
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading gray" role="tab" id="QADelayHd">
+                                    <h5 class="panel-title" data-toggle="collapse" data-target="#QADelay" aria-expanded="true" aria-controls="QADelay">
+                                        QA/Delay, Response & Repair
+                                    </h5>
+                                </div>
+                                <div id="QADelay" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                                    <div class="panel-body p0">
+                                        <div class="responsive-table">
+                                            <table class="table table-bordered">
+                                                <thead class="gray">
+                                                    <tr>
+                                                        <th>QA / Delay Codes</th>
+                                                        <th>Call to Response<br/>(Hrs, Mins)</th>
+                                                        <th>Response to Repair<br />(Hrs, Mins)</th>
+                                                        <th>Call to Repair<br />(Hrs, Mins)</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>{{scrubberRowData.QADelayCodes}}</td>
+                                                        <td>{{scrubberRowData.CallToResponse}}</td>
+                                                        <td>{{scrubberRowData.ResponseToRepair}}</td>
+                                                        <td>{{scrubberRowData.CallToRepair}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!--Panel-->
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading gray" role="tab" id="CCActionHd">
+                                    <h5 class="panel-title" data-toggle="collapse" data-target="#CCAction" aria-expanded="true" aria-controls="CCAction">
+                                        Contract Coverage, Service Zone & Action
+                                    </h5>
+                                </div>
+                                <div id="CCAction" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                                    <div class="panel-body p0">
+                                        <div class="responsive-table">
+                                            <table class="table table-bordered">
+                                                <thead class="gray">
+                                                    <tr>
+                                                        <th>Contract Coverage</th>
+                                                        <th>Service Zone</th>
+                                                        <th>Service Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>{{scrubberRowData.ContractCoverage}}</td>
+                                                        <td>{{scrubberRowData.ServiceZone}}</td>
+                                                        <td>{{scrubberRowData.ServiceAction}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!--Panel-->
+                            <div class="panel panel-default">
+                                <div class="panel-heading gray" role="tab" id="QAHd">
+                                    <h5 class="panel-title" data-toggle="collapse" data-target="#QA" aria-expanded="true" aria-controls="QA">
+                                        Response & Repair in Minutes
+                                    </h5>
+                                </div>
+                                <div id="QA" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                                    <div class="panel-body p0">
+                                        <div class="responsive-table">
+                                            <table class="table table-bordered">
+                                                <thead class="gray">
+                                                    <tr>
+                                                        <th>Call to Response Minutes</th>
+                                                        <th>Response to Repair Minutes</th>
+                                                        <th>Call to Repair Minutes</th>
+                                                        <th>Month</th>
+                                                        <th>Year</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>{{scrubberRowData.CallToResponseMinutes | number:0}}</td>
+                                                        <td>{{scrubberRowData.ResponseToRepairMinutes | number:0}}</td>
+                                                        <td>{{scrubberRowData.CallToRepairMinutes | number:0}}</td>
+                                                        <td>{{scrubberRowData.Month}}</td>
+                                                        <td>{{scrubberRowData.Year}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!--Panel-->
+                            <div class="panel panel-default">
+                                <div class="panel-heading gray" role="tab" id="CaseInfHd">
+                                    <h5 class="panel-title" data-toggle="collapse" data-target="#CaseInf" aria-expanded="true" aria-controls="CaseInf">
+                                        Case Information
+                                    </h5>
+                                </div>
+                                <div id="CaseInf" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                                    <div class="panel-body p0">
+                                        <div class="responsive-table">
+                                            <table class="table table-bordered">
+                                                <thead class="gray">
+
+                                                    <tr>
+                                                        <th>Case Title</th>
+                                                        <th>Case Summary</th>
+                                                        <th>Current Symptom Code</th>
+                                                        <th>Current Component Code</th>
+                                                        <th>Repair Code</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>{{scrubberRowData.CaseTitle}}</td>
+                                                        <td>{{scrubberRowData.CaseSummary}}</td>
+                                                        <td>{{scrubberRowData.CurrentSymptomCode}}</td>
+                                                        <td>{{scrubberRowData.CurrentComponentCode}}</td>
+                                                        <td>{{scrubberRowData.RepairCode}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!--Panel-->
+                            <div class="panel panel-default">
+                                <div class="panel-heading gray" role="tab" id="prodInfHd">
+                                    <h5 class="panel-title" data-toggle="collapse" data-target="#prodInf" aria-expanded="true" aria-controls="prodInf">
+                                        Product Information
+                                    </h5>
+                                </div>
+                                <div id="prodInf" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                                    <div class="panel-body p0">
+                                        <div class="responsive-table">
+                                            <table class="table table-bordered">
+                                                <thead class="gray">
+                                                    <tr>
+                                                        <th>Company Name</th>
+                                                        <th>Customer Name</th>
+                                                        <th>Product Description</th>
+                                                        <th>Phone number</th>
+                                                        <th>Country</th>
+                                                        <th>Postal Code</th>
+                                                        <th>X-Entry</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>{{scrubberRowData.CompanyName}}</td>
+                                                        <td>{{scrubberRowData.CustomerName}}</td>
+                                                        <td>{{scrubberRowData.ProductDescription}}</td>
+                                                        <td>{{scrubberRowData.PhoneNumber}}</td>
+                                                        <td>{{scrubberRowData.Country}}</td>
+                                                        <td>{{scrubberRowData.PostalCode}}</td>
+                                                        <td>{{scrubberRowData.XEntry}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!--Panel-->
+                            <div class="panel panel-default">
+                                <div class="panel-heading gray" role="tab" id="rawInfHd">
+                                    <h5 class="panel-title" data-toggle="collapse" data-target="#rawInf" aria-expanded="true" aria-controls="rawInf">
+                                        Service Information
+                                    </h5>
+                                </div>
+                                <div id="rawInf" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                                    <div class="panel-body p0">
+                                        <div class="responsive-table">
+                                            <table class="table table-bordered">
+                                                <thead class="gray">
+                                                    <tr>
+                                                        <th>Service Provider Category</th>
+                                                        <th>Raw Service Flag</th>
+                                                        <th>Raw Response Status</th>
+                                                        <th>Scrubbed Service Flag</th>
+                                                        <th>Scrubbed Symptom Code</th>
+                                                        <th>Scrubbed Component Code</th>
+                                                        <th>Servicing Contractor Name</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>{{scrubberRowData.ServiceProviderCatogery}}</td>
+                                                        <td>{{scrubberRowData.RawServiceFlag}}</td>
+                                                        <td>{{scrubberRowData.RawResponseStatus}}</td>
+                                                        <td>{{scrubberRowData.ScrubbedServiceFlag}}</td>
+                                                        <td>{{scrubberRowData.ScrubbedSymptomCode}}</td>
+                                                        <td>{{scrubberRowData.ScrubbedComponentCode}}</td>
+                                                        <td>{{scrubberRowData.ServicingContractorName}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!--Panel-->
+                        </div>
+                     </div>
+                </div>
+            </div>
+         </div>
+    </div>
+</div>

@@ -1,0 +1,195 @@
+﻿<div class="scrbr-setting-row">
+    <button class="btn btn-gray btn-set" ng-click="navigate('main.holidays')" ng-if="fileused.UserRole=='Administrator'">Holidays & Service Zone</button> 
+    <div class="panel-group sseting-panel" id="accordion" role="tablist" aria-multiselectable="true">
+        <form name="scrubSettingsForm" confirm-on-exit>
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="serviceAnalysisOverrideHd">
+                    <h5 class="panel-title" data-toggle="collapse" data-parent="#accordion" data-target="#serviceAnalysisOverride" aria-expanded="true" aria-controls="serviceAnalysisOverride">
+                        Service Analysis Override
+                    </h5>
+                </div>
+                <div id="serviceAnalysisOverride" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                    <div class="panel-body">
+                        <div class="alert alert-danger" style="padding: 4px;" ng-if="errorMsgMandatory">
+                            <strong>Error:</strong> Please select atleast one Criteria for each Row.
+                        </div>
+                        <div class="responsive-table">
+                            <table class="table table-bordered table-hover has-scroll-body border-control">
+                                <thead class="gray">
+                                    <tr>
+                                        <th colspan="7">Criteria</th>
+                                        <th colspan="3">Assigned Overide Value</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Country</th>
+                                        <th>Area<p>(State, Province, Etc.)</p></th>
+                                        <th>City</th>
+                                        <th>Postal Code</th>
+                                        <th>Address</th>
+                                        <th>Device Group Product Code</th>
+                                        <th>Serial Number</th>
+                                        <th>Contract Coverage Description</th>
+                                        <th>SLA</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <!--<tbody class="scroll-tbody">-->
+                                <tbody>
+                                    <tr ng-repeat="stdata in serviceAnalysisData track by $index">
+                                        <td><input type="text" class="form-control custom-form-control" ng-model="stdata.Country" ng-change="dataChange()" no-spcl-char /></td>
+                                        <td><input type="text" class="form-control custom-form-control" ng-model="stdata.Area" ng-change="dataChange()" no-spcl-char /></td>
+                                        <td><input type="text" class="form-control custom-form-control" ng-model="stdata.City" ng-change="dataChange()" no-spcl-char /></td>
+                                        <td><input type="text" class="form-control custom-form-control" ng-model="stdata.PostalCode" ng-change="dataChange()" no-spcl-char /></td>
+                                        <td><input type="text" class="form-control custom-form-control" ng-model="stdata.Address" ng-change="dataChange()" no-spcl-char /></td>
+                                        <td><input type="text" class="form-control custom-form-control" ng-model="stdata.DeviceGroup" ng-change="dataChange()" no-spcl-char /></td>
+                                        <td><input type="text" class="form-control custom-form-control" ng-model="stdata.SerialNumber" ng-change="dataChange()" no-spcl-char /></td>
+                                        <td><select class="form-control custom-form-control" ng-model="stdata.ContractCoverage" ng-options="cct.ContractName as cct.ContractName for cct in contractCoverageData" ng-change="dataChange()" >
+                                                <option value="" ng-if="false"></option>
+                                            </select></td>
+                                        <td><select class="form-control custom-form-control" ng-model="stdata.SLA" ng-options="sla.SLAName as sla.SLAName for sla in serviceLevelData" ng-change="dataChange()" >
+                                                <option value="" ng-if="false"></option>
+                                            </select></td>
+                                        <td class="text-center"><span class="ic-delete ic-blue-bg" ng-click="removeServiceAnalysisRow($index)"><i class="fa fa-trash-o" aria-hidden="true"></i></span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="text-right">
+                                <button class="btn btn-gray" ng-click="addServiceAnalysisRow()">+ Add Row</button>
+                                <button class="btn btn-blue" ng-click="saveServiceAnalysisData()">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!--Panel-->
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="ServiceLevelAgreementHd">
+                    <h5 class="panel-title" data-toggle="collapse" data-parent="#accordion" data-target="#ServiceLevelAgreement" aria-expanded="true" aria-controls="ServiceLevelAgreement">
+                        Service Level Agreement Table
+                    </h5>
+                </div>
+                <div id="ServiceLevelAgreement" ng-init="scrubberSettingsData()" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                    <div class="panel-body">
+                        <div class="responsive-table">
+                            <table class="table table-bordered table-hover">
+                                <thead class="gray">
+                                    <tr>
+                                        <th rowspan="2">SLA Name</th>
+                                        <th colspan="6">Call to Onsite Hours</th>
+                                        <th colspan="7" ng-if="fileused.UserRole=='Administrator'">Call to Repair Hours</th>
+                                        <th colspan="6" ng-if="fileused.UserRole!='Administrator'">Call to Repair Hours</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Zone 0 <p>0-25</p></th>
+                                        <th>Zone 1 <p>26-50</p></th>
+                                        <th>Zone 2 <p>51-75</p></th>
+                                        <th>Zone 3 <p>76-100</p></th>
+                                        <th>Zone 4 <p>101-200</p></th>
+                                        <th>Zone 5 <p>201-300</p></th>
+                                        <th>Zone 0 <p>0-25</p></th>
+                                        <th>Zone 1 <p>26-50</p></th>
+                                        <th>Zone 2 <p>51-75</p></th>
+                                        <th>Zone 3 <p>76-100</p></th>
+                                        <th>Zone 4 <p>101-200</p></th>
+                                        <th>Zone 5 <p>201-300</p></th>
+                                        <th ng-if="fileused.UserRole=='Administrator'"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="sla in serviceLevelData">
+                                        <td><input type="text" class="form-control custom-form-control" title="{{sla.SLAName}}" ng-model="sla.SLAName" ng-change="dataChange()" no-spcl-char /></td>
+                                        <td><input type="text" class="form-control custom-form-control" title="{{sla.Zone0}}" ng-model="sla.Zone0" ng-change="dataChange()" no-spcl-char /></td>
+                                        <td><input type="text" class="form-control custom-form-control" title="{{sla.Zone1}}" ng-model="sla.Zone1" ng-change="dataChange()" no-spcl-char /></td>
+                                        <td><input type="text" class="form-control custom-form-control" title="{{sla.Zone2}}" ng-model="sla.Zone2" ng-change="dataChange()" no-spcl-char /></td>
+                                        <td><input type="text" class="form-control custom-form-control" title="{{sla.Zone3}}" ng-model="sla.Zone3" ng-change="dataChange()" no-spcl-char /></td>
+                                        <td><input type="text" class="form-control custom-form-control" title="{{sla.Zone4}}" ng-model="sla.Zone4" ng-change="dataChange()" no-spcl-char /></td>
+                                        <td><input type="text" class="form-control custom-form-control" title="{{sla.Zone5}}" ng-model="sla.Zone5" ng-change="dataChange()" no-spcl-char /></td>
+                                        <td><input type="text" class="form-control custom-form-control" title="{{sla.Zone6}}" ng-model="sla.Zone6" ng-change="dataChange()" no-spcl-char /></td>
+                                        <td><input type="text" class="form-control custom-form-control" title="{{sla.Zone7}}" ng-model="sla.Zone7" ng-change="dataChange()" no-spcl-char /></td>
+                                        <td><input type="text" class="form-control custom-form-control" title="{{sla.Zone8}}" ng-model="sla.Zone8" ng-change="dataChange()" no-spcl-char /></td>
+                                        <td><input type="text" class="form-control custom-form-control" title="{{sla.Zone9}}" ng-model="sla.Zone9" ng-change="dataChange()" no-spcl-char /></td>
+                                        <td><input type="text" class="form-control custom-form-control" title="{{sla.Zone10}}" ng-model="sla.Zone10" ng-change="dataChange()" no-spcl-char /></td>
+                                        <td><input type="text" class="form-control custom-form-control" title="{{sla.Zone11}}" ng-model="sla.Zone11" ng-change="dataChange()" no-spcl-char /></td>
+                                        <td class="text-center" ng-if="fileused.UserRole=='Administrator'"><span class="ic-delete ic-blue-bg" ng-click="removeServiceLevelRow($index)"><i class="fa fa-trash-o" aria-hidden="true"></i></span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="text-right">
+                                <button class="btn btn-gray" ng-click="addServiceLevelRow()"  ng-if="fileused.UserRole=='Administrator'">+ Add Row</button>
+                                <button class="btn btn-blue" ng-click="saveServiceLevelData()">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!--Panel-->
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="ContractCoverageTableHd">
+                    <h5 class="panel-title" data-toggle="collapse" data-parent="#accordion" data-target="#ContractCoverageTable" aria-expanded="true" aria-controls="ContractCoverageTable">
+                        Contract Coverage Table
+                    </h5>
+                </div>
+                <div id="ContractCoverageTable" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                    <div class="panel-body">
+                        <div class="responsive-table">
+                            <table class="table table-bordered table-hover">
+                                <thead class="gray">
+                                    <tr>
+                                        <th rowspan="2">Description <p>(From Report)</p></th>
+                                        <th colspan="2">Monday</th>
+                                        <th colspan="2">Tuesday</th>
+                                        <th colspan="2">Wednesday</th>
+                                        <th colspan="2">Thursday</th>
+                                        <th colspan="2">Friday</th>
+                                        <th colspan="2">Saturday</th>
+                                        <th colspan="2">Sunday</th>
+                                        <th ng-if="fileused.UserRole=='Administrator'"></th>
+                                    </tr>
+                                    <tr>
+                                        <th>Start</th>
+                                        <th>End</th>
+                                        <th>Start</th>
+                                        <th>End</th>
+                                        <th>Start</th>
+                                        <th>End</th>
+                                        <th>Start</th>
+                                        <th>End</th>
+                                        <th>Start</th>
+                                        <th>End</th>
+                                        <th>Start</th>
+                                        <th>End</th>
+                                        <th>Start</th>
+                                        <th>End</th>
+                                        <th ng-if="fileused.UserRole=='Administrator'"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="cct in contractCoverageData">
+                                        <td><input type="text" class="form-control custom-form-control" ng-model="cct.ContractName" ng-change="dataChange()" /></td>
+                                        <td><input type="text" class="form-control custom-form-control" ng-model="cct.MonStart" ng-change="dataChange()" no-spcl-char /></td>
+                                        <td><input type="text" class="form-control custom-form-control" ng-model="cct.MonEnd" ng-change="dataChange()" no-spcl-char /></td>
+                                        <td><input type="text" class="form-control custom-form-control" ng-model="cct.TueStart" ng-change="dataChange()" no-spcl-char /></td>
+                                        <td><input type="text" class="form-control custom-form-control" ng-model="cct.TueEnd" ng-change="dataChange()" no-spcl-char /></td>
+                                        <td><input type="text" class="form-control custom-form-control" ng-model="cct.WedStart" ng-change="dataChange()" no-spcl-char /></td>
+                                        <td><input type="text" class="form-control custom-form-control" ng-model="cct.WedEnd" ng-change="dataChange()" no-spcl-char /></td>
+                                        <td><input type="text" class="form-control custom-form-control" ng-model="cct.ThuStart" ng-change="dataChange()" no-spcl-char /></td>
+                                        <td><input type="text" class="form-control custom-form-control" ng-model="cct.ThuEnd" ng-change="dataChange()" no-spcl-char /></td>
+                                        <td><input type="text" class="form-control custom-form-control" ng-model="cct.FriStart" ng-change="dataChange()" no-spcl-char /></td>
+                                        <td><input type="text" class="form-control custom-form-control" ng-model="cct.FriEnd" ng-change="dataChange()" no-spcl-char /></td>
+                                        <td><input type="text" class="form-control custom-form-control" ng-model="cct.SatStart" ng-change="dataChange()" no-spcl-char /></td>
+                                        <td><input type="text" class="form-control custom-form-control" ng-model="cct.SatEnd" ng-change="dataChange()" no-spcl-char /></td>
+                                        <td><input type="text" class="form-control custom-form-control" ng-model="cct.SunStart" ng-change="dataChange()" no-spcl-char /></td>
+                                        <td><input type="text" class="form-control custom-form-control" ng-model="cct.SunEnd" ng-change="dataChange()" no-spcl-char /></td>
+                                        <td class="text-center" ng-if="fileused.UserRole=='Administrator'"><span class="ic-delete ic-blue-bg" ng-click="removeContractCoverageRow($index)"><i class="fa fa-trash-o" aria-hidden="true"></i></span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="text-right">
+                                <button class="btn btn-gray" ng-click="addContractCoverageRow()" ng-if="fileused.UserRole=='Administrator'">+ Add Row</button>
+                                <button class="btn btn-blue" ng-click="saveContractCoverageData()">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!--Panel-->
+        </form>
+</div><!--Panel Group Ends-->
+</div>

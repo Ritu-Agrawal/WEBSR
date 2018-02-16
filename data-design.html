@@ -1,0 +1,323 @@
+<div class="datadesign-cont">
+    <div class="container-fluid">
+        <div class="row-revenuehd">
+            <p class="text-right">Total Revenue Gain / Loss: <strong>356.64</strong></p>
+        </div>
+        <div class="toprow" ng-if="false">
+            <table class="table table-bordered staticview-table">
+                <thead class="locinfo-thead">
+                    <tr class="hp-light-gray-bg text-left">
+                        <th></th>
+                        <th>Month</th>
+                        <th>Year</th>
+                        <th></th>
+                        <th>Month</th>
+                        <th>Year</th>
+                        <th></th>
+                        <th>Month</th>
+                        <th>Year</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Current Revenue</td>
+                        <td>-8075</td>
+                        <td>-96900</td>
+                        <td>Revenue Differential Gains</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>Projected Revenue</td>
+                        <td>-8075</td>
+                        <td>-96900</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="top-space-30 text-right" style="display:none">
+            <button class="btn btn-gray" ng-click="dataDesignCtrl.showCurrencyModal()">Curency Conversion</button>
+            <button class="btn btn-gray" ng-click="dataDesignCtrl.deviceMismatchModal()">Device Mismatch</button>
+        </div>
+        <!--<div class="row" ng-controller="dataDesignController">
+            <nvd3 options="options" data="data" class="with-3d-shadow with-transitions"></nvd3>
+        </div>-->
+        <div class="increse-width">
+            <div class="row">
+                <!-- Data Design Right side tabs Section -->
+                <ul class="nav blue-tab-nav nav-tabs dd-tab-nav" role="tablist">
+                    <li role="presentation" class="active"><a data-target="#DeviceInfoTab" aria-controls="home" role="tab" data-toggle="tab">Device Information</a></li>
+                    <li role="presentation"><a data-target="#Last12MonthsTab" aria-controls="profile" role="tab" data-toggle="tab">{{dataDesignCtrl.hdMonthTitle[1]}}</a></li>
+                    <li role="presentation"><a data-target="#UsageSummariesTab" aria-controls="messages" role="tab" data-toggle="tab">Usage Summaries</a></li>
+                    <li role="presentation"><a data-target="#currentRevenueAnalysisTab" aria-controls="settings" role="tab" data-toggle="tab">Current Revenue Analysis</a></li>
+                    <li role="presentation"><a data-target="#revenueLossTab" aria-controls="settings" role="tab" data-toggle="tab">Revenue Loss <span class="small-txt">(per month)</span></a></li>
+                    <li role="presentation"><a data-target="#propesedChangesTab" aria-controls="settings" role="tab" data-toggle="tab">Proposed Changes</a></li>
+                </ul>
+                <div class="dataview-leftsec col-md-6">
+                    <table class="table table-bordered locinfo-table ">
+                        <thead class="locinfo-thead">
+                            <tr class="hp-medium-gray-bg">
+                                <th colspan="7" class="text-center">Location </br> Information</th>
+                                <th colspan="2" class="text-center">{{dataDesignCtrl.hdMonthTitle[0]}} <p class="small-txt" style="margin-bottom:0">Showing {{dataDesignCtrl.dataDesignDataTotal}} of {{dataDesignCtrl.dataDesignDataTotal}} (Total Fleet)</p></th>
+                            </tr>
+                            <tr class="hp-light-gray-bg text-left">
+                                <!--<th class="serial-col">Rpts Row</th>-->
+                                <th>Rpts<br>Row</th>
+                                <th>Area</th>
+                                <th>Site</th>
+                                <th>Building</th>
+                                <th>Level</th>
+                                <th>Grid</th>
+                                <th>Business Unit</th>
+                                <th>Device Description <p class="small-txt" style="margin-bottom:0">(Invoiced Devices Only)</p></th>
+                                <th>Serial Number</th>
+                            </tr>
+                        </thead>
+                        <tbody class="locinfo-tbody">
+                            <tr ng-repeat="cel in dataDesignCtrl.dataDesignData" ng-click="dataDesignCtrl.showGraphs(cel)" class="tr-p-margin-btm-0">
+                                <td><span ng-show="cel.D_DeviceID != 0">{{cel.D_DeviceID}}</span></td>
+                                <td><span style="max-width:45px" class="ellipsis-txt-span" title="{{cel.D_Area}}">{{cel.D_Area}}</span></td>
+                                <td><span style="max-width:70px" class="ellipsis-txt-span" title="{{cel.D_Site}}">{{cel.D_Site}}</span></td>
+                                <td><span style="max-width:90px" class="ellipsis-txt-span" title="{{cel.D_Building}}">{{cel.D_Building}}</span></td>
+                                <td><span class="ellipsis-txt-span" title="{{cel.D_Level}}">{{cel.D_Level}}</span></td>
+                                <td><span class="ellipsis-txt-span" title="{{cel.D_Grid}}">{{cel.D_Grid}}</span></td>
+                                <td><span class="ellipsis-txt-span" title="{{cel.D_Business_Unit}}">{{cel.D_Business_Unit}}</span></td>
+                                <td><span style="max-width:190px" class="ellipsis-txt-span" title="{{cel.D_ModelDescription}}">{{cel.D_ModelDescription}}</span></td>
+                                <td>{{cel.D_SerialNumber}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div><!-- LEFT SECTION ENDS -->
+                <div class="col-md-6 pad-left-0 pad-right-0 dataview-rightsec">                    
+                    <!-- Data Design Right side panes -->
+                    <div class="tab-content ddtabcont-section">
+                        <div role="tabpanel" class="tab-pane active" id="DeviceInfoTab">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr class="hp-medium-blue-bg">
+                                        <th colspan="3" class="text-center">Lease Information</th>
+                                        <th colspan="4" class="text-center">SOW Information</th>
+                                    </tr>
+                                    <tr class="hp-light-blue-bg">
+                                        <th>Lease Start / Renewal Date</th>
+                                        <th>Months Remaining</th>
+                                        <th>Number of Months Invoiced in Report Span</th>
+                                        <th title="A Red cell indicates that  the device's Actual Volume is Less Than the Suggested Minimum Volume.">Minimum Monthly Volume</th>
+                                        <th title="A Pink cell indicates that the device's Actual Volume is Less Than the Target Volume. Note:The Mono and Color Targets are combined.">Contract Target Monthly Volume</th>
+                                        <th title="A Dark Blue cell indicates that the device's Actual Averge Volume is Greater Than the Suggested Maximum Volume. A Light Blue cell indicates that the device's Actual Average Volume is Within Range but there are 1 or more months that Exceed the Suggested Maximum Volume.">Maximum Monthly Volume</th>
+                                        <th title="A Gold cell indecates that the Projected End of Lease Volume will Exceed the Devices Maximum Engine Life. Note:Maximum Engine Life is two times the devices rated Engine Life.">Product Code</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="dcel in dataDesignCtrl.dataDesignData">
+                                        <td>{{dcel.D_DeviceInfo[0].LeaseStartDate | cmdate:'dd/MM/yy'}}</td>
+                                        <td>{{dcel.D_DeviceInfo[0].MonthsRemaining | number:0}}</td>
+                                        <td>{{dcel.D_DeviceInfo[0].NumberofMonthsInvoiced | number:0}}</td>
+                                        <td>{{dcel.D_DeviceInfo[0].MinimumMonthlyVolume | number:0}}</td>
+                                        <td>{{dcel.D_DeviceInfo[0].ContractTargetMonthlyVolume | number:0}}</td>
+                                        <td>{{dcel.D_DeviceInfo[0].MaximumMonthlyVolume | number:0}}</td>
+                                        <td>{{dcel.D_DeviceInfo[0].ProductCode}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="Last12MonthsTab">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr class="hp-medium-blue-bg">
+                                        <th colspan="6" class="text-center">Component Usage Averages</th>
+                                        <th colspan="4" class="text-center">Usage Extremes</th>
+                                    </tr>
+                                    <tr class="hp-light-blue-bg">
+                                        <th>Duplex</th>
+                                        <th>11x17 A3 Usage</th>
+                                        <th>Copy Usage</th>
+                                        <th title="All scan activity.">Total Scan Usage</th>
+                                        <th title="Scan to Fax, Folder & Email.">Digital Send Usage</th>
+                                        <th>Faxes Received</th>
+                                        <th title="This represents the actual usage date, not the invoice date.">Highest Month</th>
+                                        <th>Highest Month Count</th>
+                                        <th title="This represents the actual usage date, not the invoice date.">Lowest Month</th>
+                                        <th>Lowest&nbsp;Month Count</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="lcel in dataDesignCtrl.dataDesignData">
+                                        <td>{{lcel.D_UsageList[0].Duplex | number:0}}</td>
+                                        <td>{{lcel.D_UsageList[0].A3Usage | number:0}}</td>
+                                        <td>{{lcel.D_UsageList[0].CopyUsage | number:0}}</td>
+                                        <td>{{lcel.D_UsageList[0].TotalScanUsage | number:0}}</td>
+                                        <td>{{lcel.D_UsageList[0].DigitalSendUsage | number:0}}</td>
+                                        <td>{{lcel.D_UsageList[0].FaxesReceived | number:0}}</td>
+                                        <td>{{lcel.D_UsageList[0].HighestMonth | cmdate:'MMM-yy'}}</td>
+                                        <td><span ng-if="lcel.D_UsageList[0].HighestMonthCount!='0'">{{lcel.D_UsageList[0].HighestMonthCount | number:0}}</span></td>
+                                        <td>{{lcel.D_UsageList[0].LowestMonth | cmdate:'MMM-yy'}}</td>
+                                        <td><span ng-if="lcel.D_UsageList[0].LowestMonthCount!='0'">{{lcel.D_UsageList[0].LowestMonthCount | number:0}}</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="UsageSummariesTab">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr class="hp-medium-blue-bg">
+                                        <th colspan="3" class="text-center">{{dataDesignCtrl.getNumberfrmstr[0]}} Month Averages</th>
+                                        <th colspan="3" class="text-center">Lifetime</th>
+                                        <th colspan="2" class="text-center">Utilization</th>
+                                    </tr>
+                                    <tr class="hp-light-blue-bg">
+                                        <th>Total Color & Color Pro</th>
+                                        <th>Total Mono & Color Accent</th>
+                                        <th>Total Pages</th>
+                                        <th>Total Count To Date </th>
+                                        <th>Monthly Average</th>
+                                        <th title="The Projected Total Count at Lease End is based on the average monthly volume for the time period sampled.">Projected Total Count (Lease End)</th>
+                                        <th>Percent of Device Maximum Volume</th>
+                                        <th>Percent of Contracted Target Volume</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="ucel in dataDesignCtrl.dataDesignData">
+                                        <td>{{ucel.D_UsageSummary[0].TotalColorColorPro | number:0}}</td>
+                                        <td>{{ucel.D_UsageSummary[0].TotalMonoColorAccent | number:0}}</td>
+                                        <td>{{ucel.D_UsageSummary[0].TotalPages | number:0}}</td>
+                                        <td>{{ucel.D_UsageSummary[0].TotalCountToDate | number:0}}</td>
+                                        <td>{{ucel.D_UsageSummary[0].MonthlyAverage | number:0}}</td>
+                                        <td>{{ucel.D_UsageSummary[0].ProjectedTotalCount | number:0}}</td>
+                                        <td>{{ucel.D_UsageSummary[0].PercentofDeviceMaximumVolume  | number:2}}%</td>
+                                        <td>{{ucel.D_UsageSummary[0].PercentofContractedTargetVolume | number:2}}%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="currentRevenueAnalysisTab">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr class="hp-medium-blue-bg">
+                                        <th colspan="3" class="text-center">Actual {{dataDesignCtrl.getNumberfrmstr[0]}} Month Averages</th>
+                                        <th colspan="3" class="text-center">Target Monthly Averages</th>
+                                        <th class="text-center"></th>
+                                    </tr>
+                                    <tr class="hp-light-blue-bg">
+                                        <th>Color Click Revenue</th>
+                                        <th>Mono Click Revenue</th>
+                                        <th title="Includes Base Charge (if applicable)">Total Revenue</th>
+                                        <th>Color Click Revenue</th>
+                                        <th>Mono Click Revenue</th>
+                                        <th title="Includes Base Charge (if applicable)">Total Revenue</th>
+                                        <th>Average Revenue Gain/Loss (per month)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="ccel in dataDesignCtrl.dataDesignData">
+                                        <td>{{ccel.D_CurrentRevenueAnalysis[0].ActualColorClickRevenue  | number:2}}</td>
+                                        <td>{{ccel.D_CurrentRevenueAnalysis[0].ActualMonoClickRevenue | number:2}}</td>
+                                        <td>{{ccel.D_CurrentRevenueAnalysis[0].ActualTotalRevenue | number:2}}</td>
+                                        <td>{{ccel.D_CurrentRevenueAnalysis[0].TargetColorClickRevenue | number:2}}</td>
+                                        <td>{{ccel.D_CurrentRevenueAnalysis[0].TargetMonoClickRevenue | number:2}}</td>
+                                        <td>{{ccel.D_CurrentRevenueAnalysis[0].TargetTotalRevenue | number:2}}</td>
+                                        <td class="negval-span" ng-class="{'hp-red':ccel.D_CurrentRevenueAnalysis[0].AverageRevenue < 0}"><span ng-if="ccel.D_CurrentRevenueAnalysis[0].AverageRevenue < 0">( </span>{{ccel.D_CurrentRevenueAnalysis[0].AverageRevenue | checkNagitiveVal | number:2}}<span ng-if="ccel.D_CurrentRevenueAnalysis[0].AverageRevenue < 0"> )</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="revenueLossTab">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr class="hp-medium-blue-bg">
+                                        <th></th>
+                                        <th>&gt; <br> 0</th>
+                                        <th>&gt; <br>100</th>
+                                        <th>&gt; <br>200</th>
+                                        <th>&gt; <br>300</th>
+                                        <th>&gt; <br>400</th>
+                                        <th>&gt; <br>500</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="ccel in dataDesignCtrl.dataDesignData">
+                                        <td class="negval-span" ng-class="{'hp-red':ccel.D_CurrentRevenueAnalysis[0].AverageRevenue < 0}"><span ng-if="ccel.D_CurrentRevenueAnalysis[0].AverageRevenue < 0">( </span>{{ccel.D_CurrentRevenueAnalysis[0].AverageRevenue | checkNagitiveVal | number:2}}<span ng-if="ccel.D_CurrentRevenueAnalysis[0].AverageRevenue < 0"> )</span></td>
+                                        <td colspan="6" class="revenueloss-bar-block">
+                                            <span class="devider"></span><span class="devider"></span><span class="devider"></span>
+                                            <div class="bar-horizental" ng-class="{ 'fst': ccel.D_CurrentRevenueAnalysis[0].AverageRevenue <= -1, 'scnd': ccel.D_CurrentRevenueAnalysis[0].AverageRevenue < -100, 'thrd': ccel.D_CurrentRevenueAnalysis[0].AverageRevenue < -200, 'forth': ccel.D_CurrentRevenueAnalysis[0].AverageRevenue < -300, 'fifth': ccel.D_CurrentRevenueAnalysis[0].AverageRevenue < -400, 'sixth': ccel.D_CurrentRevenueAnalysis[0].AverageRevenue < -500}" tooltip-animation="true" uib-tooltip="{{ccel.D_CurrentRevenueAnalysis[0].AverageRevenue}}"></div>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="propesedChangesTab" style="overflow-x:auto">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr class="hp-medium-blue-bg">
+                                        <th colspan="4" class="text-right">
+                                            <button class="btn btn-blue" ng-click="dataDesignCtrl.setSuggestedDevice()">Set Suggested Device</button>
+                                        </th>
+                                    </tr>
+                                    <tr class="hp-medium-blue-bg">
+                                        <th>Suggested Replacement Device</th>
+                                        <th>Source</th>
+                                        <th>Ignore</th>
+                                        <th>Resulting Revenue Differential Gains</th>
+                                        <!--<th colspan="3">Projected&nbsp;Monthly&nbsp;Averages</th>
+                                        <th rowspan="2">Projected Total Count</th>
+                                        <th colspan="3">Projected&nbsp;12&nbsp;Monthly&nbsp;Averages</th>
+                                        <th colspan="3">Target&nbsp;Monthly&nbsp;Averages</th>
+                                        <th rowspan="2">Average Revenue Gain/Loss</th>-->
+                                    </tr>
+                                    <!--<tr class="hp-light-blue-bg">
+                                        <th>Total Color</th>
+                                        <th>Total Mono</th>
+                                        <th>Total Pages</th>
+                                        <th>Color Click</th>
+                                        <th>Mono Click</th>
+                                        <th>Total Revenue</th>
+                                        <th>Color Click</th>
+                                        <th>Mono Click</th>
+                                        <th>Total Revenue</th>
+                                    </tr>-->
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="pccel in dataDesignCtrl.dataDesignData">
+                                        <td>
+                                            <span style="max-width:120px" class="ellipsis-txt-span" title="Suggested Device">Suggested Device</span>
+                                            <i style="display:none">{{ccel.D_CurrentRevenueAnalysis[0].AverageRevenue}}</i>
+                                        </td>
+                                        <td>Sow</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div><!--RIGHT SECTION ENDS-->
+            </div>
+        </div>
+        <div class="pagination-block" style="display:none">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row selectpage-size">
+                        <div class="pull-left"><p class="beside-input">Show Rows</p></div>
+                        <div class="col-md-2">
+                            <select class="form-control" ng-model="viewby" ng-change="setItemsPerPage(viewby)">
+                                <option value="5" ng-selected="true">5</option>
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="30">30</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-8">
+                            <ul uib-pagination boundary-links="false" total-items="totalItems" ng-model="currentPage" items-per-page="itemsPerPage" class="pagination-sm pagination-custom" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+                        </div>
+                        <div class="col-md-3"><p class="beside-input text-right"> {{sowCtrl.sowdatamodelAll.length}} items</p></div>
+                    </div>
+                </div>
+            </div>
+        </div><!--PAGINATION ENDS-->
+    </div>
+</div>

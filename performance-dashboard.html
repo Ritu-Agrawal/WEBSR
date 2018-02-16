@@ -1,0 +1,208 @@
+﻿<div class="cont performanceDashboardCont">
+  <div class="datadesign-cont">
+    <div class="container-fluid">
+      <div class="row topButtonsCont">
+        <div class="col-md-12">
+          <button class="btn btn-blue pull-right" ng-click="performDashCtrl.openMarketVerticleModal()">Market Verticle Data</button>
+          <button class="btn btn-blue pull-right">Create/Update SBR</button>
+          <button class="btn btn-blue pull-right">Export this file to flat file</button>
+        </div>
+      </div>
+      <div class="top-space-30">
+        <div class="tabsContainer hp-light-blue-bg">
+          <div class="row btnContainer">
+            <div class="col-md-12">
+              <button class="btn btn-blue " ng-click="performDashCtrl.selectAll()">Check All</button>
+              <button class="btn btn-blue " ng-click="performDashCtrl.deSelectAll()">Uncheck All</button>
+            </div>
+          </div>
+          <div class="inputCont pull-left row" ng-repeat="tab in performDashCtrl.tableInfo track by $index">
+            <label for="{{tab.RowHeader}}">
+              <input type="checkbox" name="selectTabs" ng-model="tab.enable" ng-change="performDashCtrl.displayTables(tab.ID,tab.enable)" /> {{tab.RowHeader}}
+            </label>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+
+        <div class="tableContainer ">
+          <div class="sliderMonths row">
+            <div class="col-md-8">
+              <label class="pull-left" for="slider">Date Slider :</label>
+              <div class="pull-left">
+                <input type="range" min="0" max="12" id="slider" step="1" value="0" list="tickmarks" ng-change="performDashCtrl.slideTable()" ng-model="performDashCtrl.sliderRange">
+              </div>
+              <datalist id="tickmarks">
+                <option ng-repeat="item in performDashCtrl.range1 track by $index" value="$index">{{$index}}</option>
+              </datalist>
+            </div>
+            <div class="col-md-4 selectRange">
+                <div class="pull-right">
+                    <label>Select Range: </label>
+                    <select class="form-control" ng-model="performDashCtrl.selected1">
+                        <option value="" selected>Select</option>
+                        <option ng-repeat="(key, item) in performDashCtrl.range1 track by $index"  
+                                ng-if="((key >= performDashCtrl.sliderRange) && (key< performDashCtrl.displayRange)) && item.MonthYear!==''" value="{{$index}}">{{item.MonthYear}}</option>
+                    </select>
+                    to
+                    <select class="form-control" ng-model="performDashCtrl.selected2" ng-change="performDashCtrl.resetSelect()">
+                        <option value="" selected>Select</option>
+                        <option ng-repeat="(key, item) in performDashCtrl.range1 track by $index" ng-selected="key===performDashCtrl.displayRange"ng-if="((key >= performDashCtrl.sliderRange) && (key< performDashCtrl.displayRange)) && item.MonthYear!==''" value="{{$index}}">{{item.MonthYear}}</option>
+                    </select>
+                    <button class="btn btn-gray" ng-click="performDashCtrl.getAllSelectedRows()">Reset</button>
+                </div>
+            </div>
+          </div>
+            <div class="percentageFont row text-center"><h5>SBR Data range: {{performDashCtrl.startSBRrange}} to {{performDashCtrl.endSBRrange}}</h5></div>
+          <div ng-repeat="tableInfo in performDashCtrl.tableInfo track by $index" ng-show="tableInfo.enable" class="allTheTables">
+            <div class="row hp-dark-blue-bg">
+                <div class="col-md-4"><h5>{{tableInfo.RowHeader}}</h5></div>
+                <div class="col-md-4 text-center"><h6>13 Month Rolling View</h6></div>
+                <div class="col-md-4 text-right"><button class="btn btn-gray" ng-click="performDashCtrl.saveData(tableInfo.RowHeader)">Save</button></div>
+            </div>
+            <div class="row">
+              <div class="col-md-12 checkBoxesCont" ng-if="tableInfo.RowHeader =='Service Incident Categories'">
+                <input type="checkbox"> From Scrubber
+                <input type="checkbox"> Plot "Onsite" only
+                <div class="pull-right">
+                  <button class="btn-blue pull-left">Clear All Savings Data</button>
+                  <button class="btn-blue pull-left">Calculation Settings</button>
+                </div>
+              </div>
+              <div class="col-md-12 viewSummaryCont" ng-if="tableInfo.RowHeader =='Color Device Usage' || tableInfo.RowHeader =='Mono Pages on Color Devices' || tableInfo.RowHeader =='Duplex Usage'">
+                <button class="btn-blue pull-right " ng-click="performDashCtrl.openViewSummaryModal()">View Savings Summary</button>
+              </div>
+              <div class="col-md-2 pad-right-0 constantTable">
+                <table class="table table-bordered perform-leftlist-table">
+                  <thead>
+                    <tr class="lightfont">
+                      <th ng-attr-colspan="{{tableInfo.RowHeader == 'Toner/Ink Tracking' ? 2 : 0}}">
+                        <button class="btn btn-gray" ng-click="performDashCtrl.loadGraph(tableInfo.RowHeader)">Show Graph</button>
+                      </th>
+                    </tr>
+                    <tr class="lightfont" ng-repeat="tabsHeading in tableInfo.tabInfo">
+                      <th ng-if="tabsHeading.rowSpanFlag" ng-attr-rowspan="{{tabsHeading.rowSpan}}">
+                          <span ng-if="tabsHeading.RowID === 1">Used</span>
+                          <span ng-if="tabsHeading.RowID === 7">Ordered</span>
+                          <span ng-if="tabsHeading.RowID === 13">Returned</span>
+                          <span ng-if="tabsHeading.RowID === 19">Inv. Deviation</span>
+                          <span ng-if="tabsHeading.RowID === 25">Forecast</span>
+                          <span ng-if="tabsHeading.RowID === 31">Wasted Toner</span>
+                          <span ng-if="tabsHeading.RowID === 42">OSA</span>
+                      </th>
+                      <th title="{{tabsHeading.title}}" class="corner-cut">{{tabsHeading.RowName}}</th>
+                    </tr>
+                  </thead>
+                </table>
+              </div>
+              <div class="col-md-10 pad-left-0 rollingTable">
+                <table class="table table-bordered ">
+                  <thead>
+                    <tr class="lightfont">
+                      <th ng-repeat="(key, columnHeadings) in performDashCtrl.range1 track by $index" ng-if="((key >= performDashCtrl.sliderRange) && (key< performDashCtrl.displayRange))" 
+                          ng-click="performDashCtrl.selectMonth(columnHeadings)">{{columnHeadings.MonthYear}}</th>
+                      <th ng-if="tableInfo.RowHeader ==='Total Cost Of Ownership' || tableInfo.RowHeader ==='Industry Analysis Data Points(RM Reported Values)'">{{performDashCtrl.displayMonth}} Month Total</th>
+                      <th ng-if="(tableInfo.RowHeader ==='Capacities & Utilization') || (tableInfo.RowHeader ==='Device Category Summary') || (tableInfo.RowHeader ==='Color Device Usage') || (tableInfo.RowHeader ==='Mono Pages on Color Devices')||(tableInfo.RowHeader === 'Duplex Usage')||(tableInfo.RowHeader === 'Service Level')|| tableInfo.RowHeader === 'Toner/Ink Tracking' || tableInfo.RowHeader === 'Other Consumable Tracking'|| (tableInfo.RowHeader ==='Device Tracking & Deployment') || (tableInfo.RowHeader ==='NRD Summary') || (tableInfo.RowHeader ==='NID Summary')">Target/Best Practice</th>
+                      <th>{{performDashCtrl.displayMonth}} Month Average</th>
+                      <th>Market Vertical</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="dataArray in tableInfo.tabInfo" >
+                      <td class="leftTable" ng-repeat="(key, actualData) in dataArray.PDData track by $index" 
+                          ng-if="((key >= performDashCtrl.sliderRange) && (key< performDashCtrl.displayRange)) && !dataArray.colspan" 
+                          ng-attr-colspan="{{dataArray.colspan}}"
+                          ng-class="{'editableCell': dataArray.isEditable,'fontBold': dataArray.classBold,'hp-dark-gray':dataArray.classGray,'hp-red':dataArray.classRed}">
+                        <div inline-edit="actualData.rowValue" format="dataArray.dataFormat" rowid="dataArray.RowID" row-header="tableInfo.RowHeader" row-month="$index"
+                             ng-if="dataArray.isEditable" style="width:100%;height:100%;" 
+                             on-cancel="performDashCtrl.fillAllTheFields(value, rowID, rowHeader, rowMonth)"></div>
+                        <div ng-if="!dataArray.isEditable && actualData.rowValue!==''" ng-model="actualData_Key">
+                            <span class="nrmltxt.rowValue" ng-if="dataArray.dataFormat==='decimal'" ng-class="{'hp-red': actualData.rowValue < 0 }">{{actualData.rowValue  | currency:"$":5}}</span>
+                            <span class="nrmltxt.rowValue" ng-if="dataArray.dataFormat==='noDecimal'" ng-class="{'hp-red': actualData.rowValue < 0 }">{{actualData.rowValue | currency:undefined:0}}</span>
+                            <span class="nrmltxt.rowValue percentageFont" ng-if="dataArray.dataFormat==='percent'" ng-class="{'hp-red': actualData.rowValue < 0 }">{{actualData.rowValue*100  | number :2 }}%</span>
+                            <span class="nrmltxt.rowValue" ng-if="dataArray.dataFormat==='percentNoColor'" ng-class="{'hp-red': actualData.rowValue < 0 }">{{actualData.rowValue*100  | number :2 }}%</span>
+                            <span class="nrmltxt.rowValue" ng-if="dataArray.dataFormat==='noPercent'" ng-class="{'hp-red': actualData.rowValue < 0 }">{{actualData.rowValue  | number :0 }}</span>
+                            <span class="nrmltxt.rowValue" ng-if="dataArray.dataFormat==='string'">{{actualData.rowValue}}</span>
+                            <span class="nrmltxt.rowValue" ng-if="dataArray.dataFormat==='customNumber'">{{actualData.rowValue | customNumber}}</span>
+                            <span class="nrmltxt.rowValue" ng-if="dataArray.dataFormat==='customNumberFloat'">{{actualData.rowValue | customNumberFloat}}</span>
+                        </div>
+                        <div ng-if="!dataArray.isEditable && actualData.rowValue===''">
+                          <span class="nrmltxt.rowValue">{{actualData.rowValue}}</span>
+                        </div>
+                      </td>
+                        <td style="background-color: #C8ECFE;background-image: none;" ng-if="dataArray.colspan" ng-attr-colspan="{{dataArray.colspan}}">
+                            <div class="col-md-12 checkBoxesCont" ng-if="dataArray.RowName =='Service Incident Categories'">
+                                <div class="pull-left">
+                                    <input type="checkbox"> From Scrubber
+                                    <input type="checkbox"> Plot "Onsite" only
+                                </div>
+                                <div class="pull-right">
+                                    <button class="btn-blue pull-left">Clear All Savings Data</button>
+                                    <button class="btn-blue pull-left">Calculation Settings</button>
+                                    <button class="btn-blue pull-left" ng-click="performDashCtrl.loadGraph('Service Incident Categories')">Show Graph</button>
+                                </div>
+                            </div>
+                        </td>
+                      <td colspan="{{actualData.colspan}}" ng-repeat="(key, actualData) in dataArray.summaryData track by $index" title="{{actualData.title}}" class="corner-cut"
+                          ng-class="{'editableCell': actualData.editable,'stripped':actualData.class,'fontBold': dataArray.classBold,'hp-dark-gray':dataArray.classGray,'hp-red':dataArray.classRed,'hp-light-blue-bg':(dataArray.RowName =='Service Level Agreements (MISSED Count)'),'bgboldgray':(dataArray.RowName =='Service Incident Categories')}">
+                            <div ng-if="actualData.rowValue!=='' && !actualData.class" ng-model="actualData_Key">
+                            <span class="nrmltxt.rowValue" ng-if="dataArray.dataFormat==='decimal'" ng-class="{'hp-red': actualData.rowValue < 0 }">{{actualData.rowValue  | currency:"$":5}}</span>
+                            <span class="nrmltxt.rowValue" ng-if="dataArray.dataFormat==='noDecimal'" ng-class="{'hp-red': actualData.rowValue < 0 }">{{actualData.rowValue | currency:undefined:0}}</span>
+                            <span class="nrmltxt.rowValue percentageFont" ng-if="dataArray.dataFormat==='percent'" ng-class="{'hp-red': actualData.rowValue < 0 }">{{actualData.rowValue*100  | number :2 }}%</span>
+                            <span class="nrmltxt.rowValue" ng-if="dataArray.dataFormat==='percentNoColor'" ng-class="{'hp-red': actualData.rowValue < 0 }">{{actualData.rowValue*100  | number :2 }}%</span>
+                            <span class="nrmltxt.rowValue" ng-if="dataArray.dataFormat==='noPercent'" ng-class="{'hp-red': actualData.rowValue < 0 }">{{actualData.rowValue  | number :0 }}</span>
+                            <span class="nrmltxt.rowValue" ng-if="dataArray.dataFormat==='string'">{{actualData.rowValue}}</span>
+                            <span class="nrmltxt.rowValue" ng-if="dataArray.dataFormat==='customNumber'">{{actualData.rowValue | customNumber}}</span>
+                            <span class="nrmltxt.rowValue" ng-if="dataArray.dataFormat==='customNumberFloat'">{{actualData.rowValue | customNumberFloat}}</span>
+                        </div>
+                        <div ng-if="actualData.rowValue==='' && !actualData.class">
+                          <span class="nrmltxt.rowValue">{{actualData.rowValue}}</span>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="row summaryTable">
+              <table class="ng-hide table-bordered pull-right hp-white" ng-class="{'ColorUsageSummaryTable': tabInfo.tabName.name == 'Color Device Usage'}">
+                <tr>
+                  <td>Color Page Count Change</td>
+                  <td>CHF -6,789,567</td>
+                </tr>
+                <tr>
+                  <td>Color Vs Mono Cost Difference</td>
+                  <td>CHF 0</td>
+                </tr>
+                <tr>
+                  <td>Overall Potential Savings</td>
+                  <td>CHF -292,778</td>
+                </tr>
+              </table>
+              <table class="ng-hide table-bordered pull-right hp-white" ng-class="{'MonoPagesOnColorDevicesSummaryTable': tabInfo.tabName.name == 'Mono Pages on Color Devices'}">
+                <tr>
+                  <td>Est. Expense at Target:</td>
+                  <td>CHF -6,789,567</td>
+                </tr>
+                <tr>
+                  <td>Overall Potential Savings</td>
+                  <td>CHF 0</td>
+                </tr>
+              </table>
+              <table class="ng-hide table-bordered pull-right hp-white" ng-class="{'DuplexUsageSummaryTable': tabInfo.tabName.name == 'Duplex Usage'}">
+                <tr>
+                  <td>Est. Savings at Target:</td>
+                  <td>CHF -6,789,567</td>
+                </tr>
+                <tr>
+                  <td>Est. Savings Difference:</td>
+                  <td>CHF 0</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

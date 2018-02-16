@@ -1,0 +1,698 @@
+<div class="cont optimizationSummaryCont">
+    <div class="datadesign-cont">
+        <div class="container-fluid">
+            <div class="text-right toprow"><button class="btn btn-blue" ng-disabled="optimizeSumCtrl.defaultSettingBtn" ng-click="optimizeSumCtrl.defaultSettingsModal()">Default Settings</button></div>
+            <div class="increse-width">
+                <div class="row optmize-table-row">
+                    <div class="optimize-leftsec col-md-5 pad-right-0">
+                        <h3 class="h3 hd-title">Current Customer Fleet</h3>
+                        <table class="devicegroup-table table table-bordered">
+                            <thead class="hp-light-gray-bg vertcl-bottom">
+                                <tr>
+                                    <th>Device Group</th>
+                                    <th>Product Code</th>
+                                    <th>Total Device Count</th>
+                                    <th>Reporting Device Count</th>
+                                    <th>NRD Count</th>
+                                    <th>NRD Exceptions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="dgtable-body">
+                                <tr ng-repeat="bodycnt in currentCustomerFleet">
+                                    <td><span style="max-width:160px" class="ellipsis-txt-span margin-btootm-none" title="{{bodycnt.Device_Group}}">{{bodycnt.Device_Group}}</span></td>
+                                    <td>{{bodycnt.Product_Code}}</td>
+                                    <td>{{bodycnt.Total_Device_Count}}</td>
+                                    <td>{{bodycnt.Reporting_Device_Count}}</td>
+                                    <td>{{bodycnt.NRD_Count}}</td>
+                                    <td>{{bodycnt.NRD_Exceptions}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div><!-- LEFT SECTION ENDS -->
+                    <div class="optimize-rightsec col-md-7 pad-left-0 pad-right-0">
+                        <!-- Data Design Right side tabs Section -->
+                        <ul class="nav blue-tab-nav nav-tabs os-tab-nav" role="tablist">
+                            <li role="presentation" class="active"><a data-target="#DeviceCategoryTab" aria-controls="DeviceCategoryTab" role="tab" data-toggle="tab">Device Category</a></li>
+                            <li role="presentation"><a data-target="#totalCountsCatTab" aria-controls="totalCountsCatTab" role="tab" data-toggle="tab">Total Counts (by Category)</a></li>
+                            <li role="presentation"><a data-target="#totalCountsFunTab" aria-controls="totalCountsFunTab" role="tab" data-toggle="tab">Total Counts (by Function)</a></li>
+                            <li role="presentation"><a data-target="#outputComparisonTab" aria-controls="outputComparisonTab" role="tab" data-toggle="tab">Output Comparison </a></li>
+                            <li role="presentation"><a data-target="#averageUtilizationTab" aria-controls="averageUtilizationTab" role="tab" data-toggle="tab">Average Utilization</a></li>
+                            <li role="presentation"><a data-target="#functionalModePersntTab" aria-controls="functionalModePersntTab" role="tab" data-toggle="tab">Functional Mode Percentages</a></li>
+                            <li role="presentation"><a data-target="#averageChargesTab" aria-controls="averageChargesTab" role="tab" data-toggle="tab">Average Charges</a></li>
+                            <li role="presentation"><a data-target="#averageCostPerPageTab" aria-controls="averageCostPerPageTab" role="tab" data-toggle="tab">Average Cost Per Page</a></li>
+                            <li role="presentation"><a data-target="#totalRevenueTab" aria-controls="totalRevenueTab" role="tab" data-toggle="tab">Total Revenue (by Category)</a></li>
+                            <li role="presentation"><a data-target="#revenueSummeryTab" aria-controls="revenueSummeryTab" role="tab" data-toggle="tab">Revenue Summary</a></li>
+                            <li role="presentation"><a data-target="#powerConsumptionTab" aria-controls="powerConsumptionTab" role="tab" data-toggle="tab" ng-click="optimizeSumCtrl.poweConsumtionTab()">Power Consumption</a></li>
+                        </ul>
+                        <!-- Data Design Right side panes -->
+                        <div class="tab-content optztabcont-section">
+                            <div role="tabpanel" class="tab-pane active" id="DeviceCategoryTab">
+                                <table class="table table-bordered">
+                                    <thead class="text-center">
+                                        <tr class="hp-light-gray-bg">
+                                            <th>Mono Printer</th>
+                                            <th>Color Printer</th>
+                                            <th>Mono MFP</th>
+                                            <th>Color MFP</th>
+                                            <th>Tabloid</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="lastrow">
+                                        <tr ng-repeat="colval in currentCustomerFleet">
+                                            <td><div ng-show="colval.Mono_Printer  && !$last" class="blackDot"></div><div ng-show="$last">{{colval.Mono_Printer}}</div></td>
+                                            <td><div ng-show="colval.Color_Printer  && !$last" class="redDot"></div><div ng-show="$last">{{colval.Color_Printer}}</div></td>
+                                            <td><div ng-show="colval.Mono_MFP  && !$last" class="blackDot"></div><div ng-show="$last">{{colval.Mono_MFP}}</div></td>
+                                            <td><div ng-show="colval.Color_MFP  && !$last" class="redDot"></div><div ng-show="$last">{{colval.Color_MFP}}</div></td>
+                                            <td><i ng-show="colval.Tabloid  && !$last" class="glyphicon glyphicon-ok tick"></i><div ng-show="$last">{{colval.Tabloid}}</div></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="totalCountsCatTab">
+                                <table class="table table-bordered">
+                                    <thead class="text-center">
+                                        <tr class="hp-light-gray-bg">
+                                            <th>Total Pages</th>
+                                            <th>Mono Pages (All)</th>
+                                            <th>Mono Pages (Mono)</th>
+                                            <th>Mono Pages (Color)</th>
+                                            <th>Color Pages</th>
+                                            <th>Duplex Sheets</th>
+                                            <th>11x17 Pages</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="lastrow">
+                                        <tr ng-repeat="tval in currentCustomerFleet">
+                                            <td>{{tval.Total_Pages | number:0}}</td>
+                                            <td>{{tval.Mono_Pages_All | number:0}}</td>
+                                            <td>{{tval.Mono_Pages_Mono | number:0}}</td>
+                                            <td>{{tval.Mono_Pages_Color | number:0}}</td>
+                                            <td>{{tval.Color_Pages | number:0}}</td>
+                                            <td>{{tval.Duplex_Sheets | number:0}}</td>
+                                            <td>{{tval.Pages11x17tc | number:0}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="totalCountsFunTab">
+                                <table class="table table-bordered">
+                                    <thead class="text-center">
+                                        <tr class="hp-light-gray-bg">
+                                            <th>Printer Pages</th>
+                                            <th>Copier Pages</th>
+                                            <th>Fax Rec'd Pages</th>
+                                            <th title="Digital Scans do not impact the Average Device Group Pages.">Digital Scans</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="lastrow">
+                                        <tr ng-repeat="tfval in currentCustomerFleet">
+                                            <td>{{tfval.Printer_Pages | number:0}}</td>
+                                            <td>{{tfval.Copier_Pages | number:0}}</td>
+                                            <td>{{tfval.Fax_Recd_Pages | number:0}}</td>
+                                            <td>{{tfval.Digital_Scans | number:0}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="outputComparisonTab">
+                                <table class="table table-bordered">
+                                    <thead class="text-center">
+                                        <tr class="hp-light-gray-bg">
+                                            <th>Minimum Monthly Volume</th>
+                                            <th>Target Monthly Volume</th>
+                                            <th>Average Monthly Volume</th>
+                                            <th>Maximum Monthly Volume</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="lastrow">
+                                        <tr ng-repeat="ocval in currentCustomerFleet">
+                                            <td>{{ocval.Minimum_Monthly_Volume | number:0}}</td>
+                                            <td>{{ocval.Target_Monthly_Volume | number:0}}</td>
+                                            <td><span ng-if="ocval.Average_Monthly_Volume!=0">{{ocval.Average_Monthly_Volume | number:0}}</span></td>
+                                            <td>{{ocval.Maximum_Monthly_Volume | number:0}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="averageUtilizationTab">
+                                <table class="table table-bordered">
+                                    <thead class="text-center">
+                                        <tr class="hp-light-gray-bg">
+                                            <th>Usage Vs. Maximum Volume</th>
+                                            <th title="The SOW Target Volume is the value reported to the customer.">Usage Vs. Target Volume</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="lastrow">
+                                        <tr ng-repeat="auval in currentCustomerFleet">
+                                            <td>{{auval.Usage_Maximum_Volume*100 | number:2}}%</td>
+                                            <td>{{auval.Usage_Target_Volume*100 | number:2}}%</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="functionalModePersntTab">
+                                <table class="table table-bordered">
+                                    <thead class="text-center">
+                                        <tr class="hp-light-gray-bg">
+                                            <th>Printer Mode</th>
+                                            <th>Copier Mode</th>
+                                            <th>Fax Recieved Mode</th>
+                                            <th title="Digital Scans do not impact the Average Device Group Pages.">Digital Scan Mode (Fax, eMail & eFolder)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="lastrow">
+                                        <tr ng-repeat="fmval in currentCustomerFleet">
+                                            <td>{{fmval.Printer_Mode*100 | number:2}}%</td>
+                                            <td>{{fmval.Copier_Mode*100 | number:2}}%</td>
+                                            <td>{{fmval.Fax_Received_Mode*100 | number:2}}%</td>
+                                            <td>{{fmval.Digital_Scan_Mode*100 | number:2}}%</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="averageChargesTab">
+                                <table class="table table-bordered">
+                                    <thead class="text-center">
+                                        <tr class="hp-light-gray-bg">
+                                            <th>Base</th>
+                                            <th>Mono Click (All)</th>
+                                            <th>Mono Click (Mono)</th>
+                                            <th>Mono Click (Color)</th>
+                                            <th>Color Click</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="lastrow">
+                                        <tr ng-repeat="acpval in currentCustomerFleet">
+                                            <td>{{acpval.Base | number:2}}</td>
+                                            <td>{{acpval.Mono_Click_All | number:5}}</td>
+                                            <td>{{acpval.Mono_Click_Mono | number:5}}</td>
+                                            <td>{{acpval.Mono_Click_Color | number:5}}</td>
+                                            <td>{{acpval.Color_Click | number:5}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="averageCostPerPageTab">
+                                <table class="table table-bordered">
+                                    <thead class="text-center">
+                                        <tr class="hp-light-gray-bg">
+                                            <th>Blended</th>
+                                            <th>Mono (All)</th>
+                                            <th>Mono (Mono)</th>
+                                            <th>Mono (Color)</th>
+                                            <th>Color</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="lastrow">
+                                        <tr ng-repeat="acppval in currentCustomerFleet">
+                                            <td>{{acppval.Blended | number:5 }}</td>
+                                            <td>{{acppval.Mono_All | number:5}}</td>
+                                            <td>{{acppval.Mono_Mono | number:5}}</td>
+                                            <td>{{acppval.Mono_Color | number:5}}</td>
+                                            <td>{{acppval.Color | number:5}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="totalRevenueTab">
+                                <table class="table table-bordered">
+                                    <thead class="text-center">
+                                        <tr class="hp-light-gray-bg">
+                                            <th>Base Charge (All)</th>
+                                            <th title="The Total Base Revenue from NRDs is excluded when calculating the Average Cost per Page values.">Base Charge (NRDs)</th>
+                                            <th>Mono Click (All)</th>
+                                            <th>Mono Click (Mono)</th>
+                                            <th>Mono Click (Color)</th>
+                                            <th>Color Click</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="lastrow">
+                                        <tr ng-repeat="trval in currentCustomerFleet">
+                                            <td>{{trval.Base_Charge_All | number:2}}</td>
+                                            <td>{{trval.Base_Charge_NRDs | number:2}}</td>
+                                            <td>{{trval.Mono_Click | number:2}}</td>
+                                            <td>{{trval.Mono_Click_Mono1 | number:2}}</td>
+                                            <td>{{trval.Mono_Click_Color1 | number:2}}</td>
+                                            <td>{{trval.Color_Click1 | number:2}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div role="tabpanel" class="tab-pane" id="revenueSummeryTab">
+                                <table class="table table-bordered">
+                                    <thead class="text-center">
+                                        <tr class="hp-light-gray-bg">
+                                            <th>Group Target Revenue</th>
+                                            <th>Group Actual Revenue</th>
+                                            <th>Unit Target Revenue</th>
+                                            <th>Unit Actual Revenue</th>
+                                            <th>Group Target VS. Actual (Gain/Loss)</th>
+                                            <th>Unit Target VS. Actual (Gain/Loss)</th>
+                                            <th>Percent of Target Realized</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="lastrow">
+                                        <tr ng-repeat="rsval in currentCustomerFleet">
+                                            <td>{{rsval.Group_Target_Revenue | number:2}}</td>
+                                            <td>{{rsval.Group_Actual_Revenue | number:2}}</td>
+                                            <td>{{rsval.Unit_Target_Revenue | number:2}}</td>
+                                            <td>{{rsval.Unit_Actual_Revenue | number:2}}</td>
+                                            <td class="negval-span" ng-class="{'redColor':rsval.Group_Target_Actual<0}"><span ng-if="rsval.Group_Target_Actual<0">( </span>{{rsval.Group_Target_Actual | checkForGainOrLoss | number:2}}<span ng-if="rsval.Group_Target_Actual<0"> )</span></td>
+                                            <td class="negval-span" ng-class="{'redColor':rsval.Group_Target_Actual<0}"><span ng-if="rsval.Unit_Target_Actual<0">( </span>{{rsval.Unit_Target_Actual | checkForGainOrLoss | number:2}}<span ng-if="rsval.Unit_Target_Actual<0"> )</span></td>
+                                            <td>{{rsval.Percent_of_Target_Realized*100 | number:2}}%</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="powerConsumptionTab">
+                                <table class="table table-bordered">
+                                    <thead class="text-center">
+                                        <tr class="hp-light-gray-bg">
+                                            <th>Monthly Power Consumption per Device(kWh)</th>
+                                            <th>Monthly Power Consumption per Group(kWh)</th>
+                                            <th>Monthly Power Costs per Device</th>
+                                            <th>Monthly Power Costs per Group</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="lastrow">
+                                        <tr ng-repeat="rsval in currentCustomerFleet">
+                                            <td><span>{{rsval.Monthly_Power_Consumption_Device | number:2}}</span></td>
+                                            <td>{{rsval.Monthly_Power_Consumption_Group | number:2}}</td>
+                                            <td><span>{{rsval.Monthly_Power_Costs_Device | number:2}}</span></td>
+                                            <td>{{rsval.Monthly_Power_Costs_Group | number:2}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div><!-- RIGHT SECTION ENDS -->
+                </div><!-- Row Ends -->
+            </div>
+                <div class="increse-width">
+                    <div class="row optmize-table-row">
+                        <div class="optimize-leftsec col-md-5 pad-right-0">
+                            <h3 class="h3 hd-title">Proposed Customer Fleet</h3>
+                            <table class="devicegroup-table table table-bordered">
+                                <thead class="hp-light-gray-bg vertcl-bottom">
+                                    <tr>
+                                        <th>Device Group</th>
+                                        <th>Product Code</th>
+                                        <th>Total Device Count</th>
+                                        <th>Reporting Device Count</th>
+                                        <th>All NRDs Count</th>
+                                        <th>Device Count Changed</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="dgtable-body">
+                                    <tr ng-repeat="bodycnt in proposedCustomerFleet">
+                                        <td><span style="max-width:160px" class="ellipsis-txt-span margin-btootm-none" title="{{bodycnt.Device_Group}}">{{bodycnt.Device_Group}}</span></td>
+                                        <td>{{bodycnt.Product_Code}}</td>
+                                        <td>{{bodycnt.Total_Devices}}</td>
+                                        <td>{{bodycnt.Reporting_Device_Count}}</td>
+                                        <td>{{bodycnt.All_NRDs_Count}}</td>
+                                        <td>{{bodycnt.Device_Count_Changed}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div><!-- LEFT SECTION ENDS -->
+                        <div class="optimize-rightsec col-md-7 pad-left-0 pad-right-0">
+                            <!-- Data Design Right side tabs Section -->
+                            <ul class="nav blue-tab-nav nav-tabs os-tab-nav" role="tablist">
+                                <li role="presentation" class="active"><a data-target="#propDeviceCategoryTab" aria-controls="propDeviceCategoryTab" role="tab" data-toggle="tab">Device Category</a></li>
+                                <li role="presentation"><a data-target="#propTotalCountsCatTab" aria-controls="propTotalCountsCatTab" role="tab" data-toggle="tab">Total Counts (by Category)</a></li>
+                                <li role="presentation"><a data-target="#propTotalCountsFunTab" aria-controls="propTotalCountsFunTab" role="tab" data-toggle="tab">Total Counts (by Function)</a></li>
+                                <li role="presentation"><a data-target="#propOutputComparisonTab" aria-controls="propOutputComparisonTab" role="tab" data-toggle="tab">Output Comparison </a></li>
+                                <li role="presentation"><a data-target="#propAverageUtilizationTab" aria-controls="propAverageUtilizationTab" role="tab" data-toggle="tab">Average Utilization</a></li>
+                                <li role="presentation"><a data-target="#propFunctionalModePersntTab" aria-controls="propFunctionalModePersntTab" role="tab" data-toggle="tab">Functional Mode Percentages</a></li>
+                                <li role="presentation"><a data-target="#propAverageChargesTab" aria-controls="propAverageChargesTab" role="tab" data-toggle="tab">Average Charges</a></li>
+                                <li role="presentation"><a data-target="#propAverageCostPerPageTab" aria-controls="propAverageCostPerPageTab" role="tab" data-toggle="tab">Average Cost Per Page</a></li>
+                                <li role="presentation"><a data-target="#propTotalRevenueTab" aria-controls="propTotalRevenueTab" role="tab" data-toggle="tab">Total Revenue (by Category)</a></li>
+                                <li role="presentation"><a data-target="#propRevenueSummeryTab" aria-controls="propRevenueSummeryTab" role="tab" data-toggle="tab">Revenue Summary</a></li>
+                                <li role="presentation"><a data-target="#propPowerConsumptionTab" aria-controls="propPowerConsumptionTab" role="tab" data-toggle="tab">Power Consumption</a></li>
+                            </ul>
+                            <!-- Data Design Right side panes -->
+                            <div class="tab-content optztabcont-section">
+                                <div role="tabpanel" class="tab-pane active" id="propDeviceCategoryTab">
+                                    <table class="table table-bordered">
+                                        <thead class="text-center">
+                                            <tr class="hp-light-gray-bg">
+                                                <th>Mono Printer</th>
+                                                <th>Color Printer</th>
+                                                <th>Mono MFP</th>
+                                                <th>Color MFP</th>
+                                                <th>Tabloid</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="lastrow">
+                                            <tr ng-repeat="colval in proposedCustomerFleet">
+                                                <td><div ng-show="colval.Mono_Printer  && !$last" class="blackDot"></div><div ng-show="$last">{{colval.Mono_Printer}}</div></td>
+                                                <td><div ng-show="colval.Color_Printer  && !$last" class="redDot"></div><div ng-show="$last">{{colval.Color_Printer}}</div></td>
+                                                <td><div ng-show="colval.Mono_MFP  && !$last" class="blackDot"></div><div ng-show="$last">{{colval.Mono_MFP}}</div></td>
+                                                <td><div ng-show="colval.Color_MFP  && !$last" class="redDot"></div><div ng-show="$last">{{colval.Color_MFP}}</div></td>
+                                                <td><i ng-show="colval.Tabloid  && !$last" class="glyphicon glyphicon-ok tick"></i><div ng-show="$last">{{colval.Tabloid}}</div></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="propTotalCountsCatTab">
+                                    <table class="table table-bordered">
+                                        <thead class="text-center">
+                                            <tr class="hp-light-gray-bg">
+                                                <th>Total Pages</th>
+                                                <th>Mono Pages (All)</th>
+                                                <th>Mono Pages (Mono)</th>
+                                                <th>Mono Pages (Color)</th>
+                                                <th>Color Pages</th>
+                                                <th>Duplex Sheets</th>
+                                                <th>11x17 Pages</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="lastrow">
+                                            <tr ng-repeat="tval in proposedCustomerFleet">
+                                                <td>{{tval.Total_Pages | number:0}}</td>
+                                                <td>{{tval.Mono_Pages_All | number:0}}</td>
+                                                <td>{{tval.Mono_Pages_Mono | number:0}}</td>
+                                                <td>{{tval.Mono_Pages_Color | number:0}}</td>
+                                                <td>{{tval.Color_Pages | number:0}}</td>
+                                                <td>{{tval.Duplex_Sheets | number:0}}</td>
+                                                <td>{{tval.Pages11x17tc | number:0}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="propTotalCountsFunTab">
+                                    <table class="table table-bordered">
+                                        <thead class="text-center">
+                                            <tr class="hp-light-gray-bg">
+                                                <th>Printer Pages</th>
+                                                <th>Copier Pages</th>
+                                                <th>Fax Rec'd Pages</th>
+                                                <th title="Digital Scans do not impact the Average Device Group Pages.">Digital Scans</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="lastrow">
+                                            <tr ng-repeat="tfval in proposedCustomerFleet">
+                                                <td>{{tfval.Printer_Pages | number:0}}</td>
+                                                <td>{{tfval.Copier_Pages | number:0}}</td>
+                                                <td>{{tfval.Fax_Recd_Pages | number:0}}</td>
+                                                <td>{{tfval.Digital_Scans | number:0}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="propOutputComparisonTab">
+                                    <table class="table table-bordered">
+                                        <thead class="text-center">
+                                            <tr class="hp-light-gray-bg">
+                                                <th>Minimum Monthly Volume</th>
+                                                <th>Target Monthly Volume</th>
+                                                <th>Average Monthly Volume</th>
+                                                <th>Maximum Monthly Volume</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="lastrow">
+                                            <tr ng-repeat="ocval in proposedCustomerFleet">
+                                                <td>{{ocval.Minimum_Monthly_Volume | number:0}}</td>
+                                                <td>{{ocval.Target_Monthly_Volume | number:0}}</td>
+                                                <td><span ng-if="ocval.Average_Monthly_Volume != 0">{{ocval.Average_Monthly_Volume | number:0}}</span></td>
+                                                <td>{{ocval.Maximum_Monthly_Volume | number:0}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="propAverageUtilizationTab">
+                                    <table class="table table-bordered">
+                                        <thead class="text-center">
+                                            <tr class="hp-light-gray-bg">
+                                                <th>Usage Vs. Maximum Volume</th>
+                                                <th title="The SOW Target Volume is the value reported to the customer.">Usage Vs. Target Volume</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="lastrow">
+                                            <tr ng-repeat="auval in proposedCustomerFleet">
+                                                <td>{{auval.Usage_Maximum_Volume*100 | number:2}}%</td>
+                                                <td>{{auval.Usage_Target_Volume*100 | number:2}}%</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="propFunctionalModePersntTab">
+                                    <table class="table table-bordered">
+                                        <thead class="text-center">
+                                            <tr class="hp-light-gray-bg">
+                                                <th>Printer Mode</th>
+                                                <th>Copier Mode</th>
+                                                <th>Fax Recieved Mode</th>
+                                                <th>Digital Scan Mode (Fax, eMail & eFolder)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="lastrow">
+                                            <tr ng-repeat="fmval in proposedCustomerFleet">
+                                                <td>{{fmval.Printer_Mode*100 | number:2}}%</td>
+                                                <td>{{fmval.Copier_Mode*100 | number:2}}%</td>
+                                                <td>{{fmval.Fax_Received_Mode*100 | number:2}}%</td>
+                                                <td>{{fmval.Digital_Scan_Mode*100 | number:2}}%</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="propAverageChargesTab">
+                                    <table class="table table-bordered">
+                                        <thead class="text-center">
+                                            <tr class="hp-light-gray-bg">
+                                                <th>Base</th>
+                                                <th>Mono Click (All)</th>
+                                                <th>Mono Click (Mono)</th>
+                                                <th>Mono Click (Color)</th>
+                                                <th>Color Click</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="lastrow">
+                                            <tr ng-repeat="acpval in proposedCustomerFleet">
+                                                <td>{{acpval.Base | number:2}}</td>
+                                                <td>{{acpval.Mono_Click_All | number:5}}</td>
+                                                <td>{{acpval.Mono_Click_Mono | number:5}}</td>
+                                                <td>{{acpval.Mono_Click_Color | number:5}}</td>
+                                                <td>{{acpval.Color_Click | number:5}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="propAverageCostPerPageTab">
+                                    <table class="table table-bordered">
+                                        <thead class="text-center">
+                                            <tr class="hp-light-gray-bg">
+                                                <th>Blended</th>
+                                                <th>Mono (All)</th>
+                                                <th>Mono (Mono)</th>
+                                                <th>Mono (Color)</th>
+                                                <th>Color</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="lastrow">
+                                            <tr ng-repeat="acppval in proposedCustomerFleet">
+                                                <td>{{acppval.Blended | number:5}}</td>
+                                                <td>{{acppval.Mono_All | number:5}}</td>
+                                                <td>{{acppval.Mono_Mono | number:5}}</td>
+                                                <td>{{acppval.Mono_Color | number:5}}</td>
+                                                <td>{{acppval.Color | number:5}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="propTotalRevenueTab">
+                                    <table class="table table-bordered">
+                                        <thead class="text-center">
+                                            <tr class="hp-light-gray-bg">
+                                                <th>Base Charge (All)</th>
+                                                <th title="The Total Base Revenue from NRDs is excluded when calculating the Average Cost per Page values.">Base Charge (NRDs)</th>
+                                                <th>Mono Click (All)</th>
+                                                <th>Mono Click (Mono)</th>
+                                                <th>Mono Click (Color)</th>
+                                                <th>Color Click</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="lastrow">
+                                            <tr ng-repeat="trval in proposedCustomerFleet">
+                                                <td>{{trval.Base_Charge_All | number:2}}</td>
+                                                <td>{{trval.Base_Charge_NRDs | number:2}}</td>
+                                                <td>{{trval.Mono_Click | number:2}}</td>
+                                                <td>{{trval.Mono_Click_Mono1 | number:2}}</td>
+                                                <td>{{trval.Mono_Click_Color1 | number:2}}</td>
+                                                <td>{{trval.Color_Click1 | number:2}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="propRevenueSummeryTab">
+                                    <table class="table table-bordered">
+                                        <thead class="text-center">
+                                            <tr class="hp-light-gray-bg">
+                                                <th>Group Target Revenue</th>
+                                                <th>Group Actual Revenue</th>
+                                                <th>Unit Target Revenue</th>
+                                                <th>Unit Actual Revenue</th>
+                                                <th>Group Target VS. Actual (Gain/Loss)</th>
+                                                <th>Unit Target VS. Actual (Gain/Loss)</th>
+                                                <th>Percent of Target Realized</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="lastrow">
+                                            <tr ng-repeat="rsval in proposedCustomerFleet">
+                                                <td>{{rsval.Group_Target_Revenue | number:2}}</td>
+                                                <td>{{rsval.Group_Actual_Revenue | number:2}}</td>
+                                                <td>{{rsval.Unit_Target_Revenue | number:2}}</td>
+                                                <td>{{rsval.Unit_Actual_Revenue | number:2}}</td>
+                                                <td class="negval-span" ng-class="{'redColor':rsval.Group_Target_Actual<0}"><span ng-if="rsval.Group_Target_Actual<0">( </span>{{rsval.Group_Target_Actual | checkForGainOrLoss | number:2}}<span ng-if="rsval.Group_Target_Actual<0"> )</span></td>
+                                                <td class="negval-span" ng-class="{'redColor':rsval.Unit_Target_Actual<0}"><span ng-if="rsval.Unit_Target_Actual<0">( </span>{{rsval.Unit_Target_Actual | checkForGainOrLoss | number:2}}<span ng-if="rsval.Unit_Target_Actual<0"> )</span></td>
+                                                <td>{{rsval.Percent_of_Target_Realized*100 | number:2}}%</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="propPowerConsumptionTab">
+                                    <table class="table table-bordered">
+                                        <thead class="text-center">
+                                            <tr class="hp-light-gray-bg">
+                                                <th>Power Consumption per Device(kWh)</th>
+                                                <th>Power Consumption per Group(kWh)</th>
+                                                <th>Power Costs per Device</th>
+                                                <th>Power Costs per Group</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody class="lastrow">
+                                            <tr ng-repeat="rsval in proposedCustomerFleet">
+                                                <td><span>{{rsval.Power_Consumption_Device | number:2}}</span></td>
+                                                <td>{{rsval.Power_Consumption_Group | number:2}}</td>
+                                                <td><span>{{rsval.Power_Costs_Device | number:2}}</span></td>
+                                                <td>{{rsval.Power_Costs_Group | number:2}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div><!-- RIGHT SECTION ENDS -->
+                    </div><!-- Row Ends -->
+                </div>
+                <div class="row">
+                    <div class="col-md-4 ">
+                        <h2 class="h3">Customer Fleet Cost Summary</h2>
+                        <div class="row">
+                            <div class="col-md-3 pad-right-0">
+                                <table class="table table-bordered summary-table-side-headings">
+                                    <tbody>
+                                        <tr>
+                                            <td class="hp-light-gray-bg">{{companyName}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="hp-light-gray-bg">Current</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="hp-light-gray-bg">Future</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="hp-light-gray-bg">Cost Savings</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-md-9 pad-left-0">
+                                <table class="table table-bordered summary-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="hp-light-gray-bg hp-black">Monthly Cost</th>
+                                            <th class="hp-light-gray-bg hp-black">Anual Cost</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="costSummaryValues in customerFleetCostSummary">
+                                            <td><span class="ic-curency">{{optCurrency}}</span>{{costSummaryValues.Monthly_Cost | number:0}}</td>
+                                            <td><span class="ic-curency">{{optCurrency}}</span>{{costSummaryValues.Annual_Cost | number:0}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <h2 class="h3">HP Revenue Summary</h2>
+                        <div class="row">
+                            <div class="col-md-3 pad-right-0">
+                                <table class="table table-bordered summary-table-side-headings">
+                                    <tbody>
+                                        <tr>
+                                            <td class="hp-light-blue-bg"><span class="pic-block"><img src="public/images/hp_logo.png" /></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="hp-light-gray-bg">Current</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="hp-light-gray-bg">Future</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="hp-light-gray-bg">Gain / Loss</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div>
+                                <div class="col-md-9 pad-left-0">
+                                    <table class="table table-bordered summary-table">
+                                        <thead>
+                                            <tr>
+                                                <th class="hp-light-blue-bg hp-black">Estimated Monthly Revenue</th>
+                                                <th class="hp-light-blue-bg hp-black">Estimated Annual Revenue</th>
+                                                <th class="hp-light-blue-bg hp-black">Target Monthly Revenue</th>
+                                                <th class="hp-light-blue-bg hp-black">Revenue Difference (Gain/Loss)</th>
+                                                <th class="hp-light-blue-bg hp-black">Percentage of Target Revenue</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="revenueSummaryValues in HPRevenueSummary">
+                                                <td><span class="ic-curency">{{optCurrency}} </span> {{revenueSummaryValues.Estimated_Monthly_Revenue | number:0}}</td>
+                                                <td><span class="ic-curency">{{optCurrency}} </span> {{revenueSummaryValues.Estimated_Annual_Revenue | number:0}}</td>
+                                                <td><span class="ic-curency">{{optCurrency}} </span> {{revenueSummaryValues.Target_Monthly_Revenue | number:0}}</td>
+                                                <td ng-class="{'hp-red':revenueSummaryValues.Revenue_Difference < 0}"><span class="ic-curency">{{optCurrency}} </span>{{revenueSummaryValues.Revenue_Difference | number:0}}</td>
+                                                <td>{{revenueSummaryValues.Percentage_Target_Revenue * 100 | number:2}} %</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h3>Proposed Fleet Device Group Summary</h3>
+                <div class="row proposedFleetDeviceGroup">
+                    <div class="col-md-12">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr class="hp-light-blue-bg">
+                                    <th>Device Group</th>
+                                    <th>Product Code</th>
+                                    <th>Total Devices</th>
+                                    <th>Deleted</th>
+                                    <th>Moved or Merge</th>
+                                    <th>New</th>
+                                    <th>Future Device Count</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="bodycnt in proposedFleetDeviceGroupSummary">
+                                    <td class="text-left">{{bodycnt.Device_Group}}</td>
+                                    <td>{{bodycnt.Product_Code}}</td>
+                                    <td>{{bodycnt.Total_Devices | number:0}}</td>
+                                    <td>{{bodycnt.Deleted | number:0}}</td>
+                                    <td>{{bodycnt.Moved_Merge | number:0}}</td>
+                                    <td>{{bodycnt.New | number:0}}</td>
+                                    <td>{{bodycnt.Future_Device_Count | number:0}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div><!-- Row Ends -->
+            </div>
+    </div>
+</div>

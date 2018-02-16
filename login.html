@@ -1,0 +1,54 @@
+﻿    <div class="page" ng-controller="loginController">
+        <header class="header">
+            <div class="container-fluid">
+                <div class="row top-row">
+                    <div class="col-md-3">
+                        <div class="brand">
+                            <a ng-href="#"><img src="public/images/hp_logo.png" /><span class="slogan">Restricted</span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>            
+        </header>
+        <div class="container">
+            <div class="row login-block" ng-show="!notAuthorized"> 
+                    <div class="col-md-3"></div>
+                    <div class="col-md-3">
+                        <div class="signIn-opt">
+                            Sign In Options
+                        </div>
+                        <div class="signIn-hpcred ptop40">
+                            Use HP employee Credentials
+                        </div>
+                        <div class="form-group ptop10">
+                            sign In or register your HP employee credentials
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-blue width135" ng-click=navigate()>HP Employee Sign In</button>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="alert alert-danger" ng-if="error">
+                            <strong>Error: </strong> {{errorMsg}}
+                        </div>
+                        <form name="form" class="ptop10">
+                            <div class="form-group">
+                                <label for="username">User Email</label>
+                                <input type="text" name="username" id="username" class="form-control" ng-model="username" />
+                            </div>
+                            <!--<div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" name="password" id="password" class="form-control" ng-model="password" />
+                    </div>-->
+                            <div class="form-actions pull-right">
+                                <button type="submit" class="btn btn-blue width135" ng-click=navigate()>Sign In</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-3"></div> 
+            </div>
+            <div class="row eroormes-row" ng-hide="!notAuthorized">
+                <p class="error-mes-text">Not an Authorized user. Send email to the “Admin team”</p>
+            </div>
+        </div>
+    </div>

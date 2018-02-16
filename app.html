@@ -1,0 +1,85 @@
+﻿<div class="page" ng-controller="mainController">
+    <header class="header">
+        <div class="container-fluid">
+            <div class="row top-row">
+                <div class="col-md-3">
+                    <div class="brand">
+                        <a ng-href="#"><img src="public/images/hp_logo.png" /><span class="slogan">Restricted</span></a>
+                    </div>
+                </div>
+                <div class="col-md-3 pull-right text-right right-links" ng-if="userName">
+                    <p>
+                        <span><i class="glyphicon glyphicon-user"></i>{{userName}}</span>
+                        <span ng-click="logout()">Logout</span>
+                    </p>
+                    <p>
+                        <a href="http://bi-etl-02.fpe.boi.rd.hpicorp.net/PD-HelpFAQ/Open" target="_blank">Help & FAQ</a>
+                        <span>Support</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav class="menu" ng-if="userName">
+        <div class="container-fluid">
+            <div class="row menu-row dropdown">
+                <ul class="nav navbar-nav">
+                    <li ui-sref-active="active">
+                        <a ui-sref="main.Dashboard">Dashboard</a></li>
+                    <li ui-sref-active="active">
+                        <a ui-sref="main.InvoiceUsage" ng-class="(!fileSelected)?'notActive':''">Invoice & Usage Reports</a></li>
+                    <li ui-sref-active="active">
+                        <a ui-sref="main.SowInformation" ng-class="(disableSOW || !fileSelected)?'notActive':''">SOW Information</a></li>
+                    <li ui-sref-active="active">
+                        <a ui-sref="main.scrubber.compInfo" ng-class="(disableScrubber || !fileSelected)?'notActive':''">Service Report Scrubber</a></li> 
+                    <li ui-sref-active="active">
+                        <a ui-sref="main.datadesign" ng-class="(disableNavLinksDOP || !fileSelected)?'notActive':''">Data & Design<!--<span class="small">(Temporary)</span>--></a>
+                    </li>
+                    <li ui-sref-active="active">
+                        <a ui-sref="main.optimizationsummary"> <!--ng-class="(disableNavLinksDOP || !fileSelected)?'notActive':''"-->Optimization Summary</a>
+                    </li>
+                    <li ui-sref-active="active">
+                        <a ui-sref="main.performancedashboard" >Performance Dashboard</a></li>
+                    <li ui-sref-active="active">
+                        <a ui-sref="main.visualDashboard">Visual Dashboard</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div id="errors" ng-if="notAuthorized">
+        <div class="col-md-12">
+            <div class="row makecenter">
+                <div class="error-red ptop10">
+                    Not an Authorized user. Send email to the “Admin team”
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="errors" ng-if="serverError">
+        <div class="col-md-12">
+            <div class="row makecenter">
+                <div class="error-red ptop10">
+                    An internal error occured!
+                </div>
+                <div class="error-desc ptop10">
+                    We had a problem processing that request. Please contact the Performance Dashboard Support Team.
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="errors" ng-if="clientError">
+        <div class="col-md-12">
+            <div class="row makecenter">
+                <div class="error-red ptop10">
+                    An internal error occured!
+                </div>
+                <div class="error-desc ptop10">
+                    We had a problem processing that request. Please contact the Performance Dashboard Support Team.
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page-content" ui-view></div>
+</div>

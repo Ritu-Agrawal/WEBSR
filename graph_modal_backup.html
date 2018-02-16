@@ -1,0 +1,259 @@
+﻿<!--Capacities and utilization modal-->
+<!--<div class="modal-content capacitiesGraph">
+    <div class="modal-header">
+        <h3 class="modal-title">{{performDashCtrl.popNameToOpen}}</h3>
+    </div>
+    <div class="modal-body">
+
+    </div>
+    <div class="modal-footer">
+
+        <button class="btn btn-gray" type="button" ng-click="cancel()">Close</button>
+    </div>
+</div>-->
+<!--Device Category Summary modal-->
+
+<div class="modal-content capacitiesGraph" ng-if="performDashCtrl.popNameToOpen == 'Device Category Summary'">
+    <div class="modal-header">
+        <h3 class="modal-title">Capacities and Utilization Graphs</h3>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-3">
+                <h5>Device Category (Percentage of Current Fleet)</h5>
+                <nvd3 options="performDashCtrl.optionsPie" data="performDashCtrl.dataPie"></nvd3>
+            </div>
+            <div class="col-md-5">
+                <h5>Current Fleet Vs Market Verticle</h5>
+                <nvd3 options="performDashCtrl.optionsHorizontalBar" data="performDashCtrl.dataHorizontalBar" id="horizontalGraph"></nvd3>
+            </div>
+            <div class="col-md-4">
+                <h5>HP Devices Vs 3rd Party Devices</h5>
+                <nvd3 options="performDashCtrl.optionsCircular" data="performDashCtrl.dataCircular"></nvd3>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+
+        <button class="btn btn-gray" type="button" ng-click="cancel()">Close</button>
+    </div>
+</div>
+
+
+
+<!--Color Device Usage modal-->
+<div class="modal-content graphModal" ng-if="performDashCtrl.popNameToOpen == 'Color Device Usage'">
+    <div class="modal-header">
+        <h3 class="modal-title">Graph</h3>
+    </div>
+    <div class="modal-body">
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <nvd3 options="performDashCtrl.options" data="performDashCtrl.data"></nvd3>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+
+        <button class="btn btn-gray" type="button" ng-click="cancel()">Close</button>
+    </div>
+</div>
+
+<!--Mono Pages on Color Devices modal-->
+<div class="modal-content graphModal" ng-if="performDashCtrl.popNameToOpen == 'Mono Pages on Color Devices'">
+    <div class="modal-header">
+        <h3 class="modal-title">Graph</h3>
+    </div>
+    <div class="modal-body">
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <nvd3 options="performDashCtrl.options" data="performDashCtrl.data"></nvd3>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+
+        <button class="btn btn-gray" type="button" ng-click="cancel()">Close</button>
+    </div>
+</div>
+
+<!--Duplex Usage modal-->
+<div class="modal-content graphModal" ng-if="performDashCtrl.popNameToOpen == 'Duplex Usage'">
+    <div class="modal-header">
+        <h3 class="modal-title">Graph</h3>
+    </div>
+    <div class="modal-body">
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <nvd3 options="performDashCtrl.options" data="performDashCtrl.data"></nvd3>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+
+        <button class="btn btn-gray" type="button" ng-click="cancel()">Close</button>
+    </div>
+</div>
+
+<!--Service Level modal-->
+<div class="modal-content graphModal" ng-if="performDashCtrl.popNameToOpen == 'Service Level'">
+    <div class="modal-header">
+        <h3 class="modal-title">Graph</h3>
+    </div>
+    <div class="modal-body">
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <nvd3 options="performDashCtrl.options" data="performDashCtrl.data"></nvd3>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+
+        <button class="btn btn-gray" type="button" ng-click="cancel()">Close</button>
+    </div>
+</div>
+
+<!--Service Incident Categories modal-->
+<div class="modal-content graphModal" ng-if="performDashCtrl.popNameToOpen == 'Service Incident Categories'">
+    <div class="modal-header">
+        <h3 class="modal-title">Graph</h3>
+    </div>
+    <div class="modal-body">
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <nvd3 options="performDashCtrl.options" data="performDashCtrl.data"></nvd3>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+
+        <button class="btn btn-gray" type="button" ng-click="cancel()">Close</button>
+    </div>
+</div>
+
+<!--Toner/Ink Tracking modal-->
+<div class="modal-content graphModal" ng-if="performDashCtrl.popNameToOpen == 'Toner/Ink Tracking'">
+    <div class="modal-header">
+        <h3 class="modal-title">Graph</h3>
+    </div>
+    <div class="modal-body">
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <nvd3 options="performDashCtrl.options" data="performDashCtrl.data"></nvd3>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+
+        <button class="btn btn-gray" type="button" ng-click="cancel()">Close</button>
+    </div>
+</div>
+
+<!--Other Consumable Tracking modal-->
+<div class="modal-content graphModal" ng-if="performDashCtrl.popNameToOpen == 'Other Consumable Tracking'">
+    <div class="modal-header">
+        <h3 class="modal-title">Graph Other Consumable Tracking</h3>
+    </div>
+    <div class="modal-body">
+        <div class="container">
+            <div class="row" style="height:200px">
+                <div class="col-md-2" style="background-color:#63DAA3;top:50%;text-align:center">
+                    Staple Cartridge
+                </div>
+                <div class="col-md-10" style="height:200px">
+                    <canvas id="line" class="chart chart-line" chart-data="performDashCtrl.datatrack"
+                            chart-labels="performDashCtrl.labelstrack" chart-series="performDashCtrl.seriestrack" chart-options="performDashCtrl.optionstrack"
+                            chart-dataset-override="performDashCtrl.datasetOverridetrack"></canvas>
+                </div>
+            </div>
+        </div>
+        <!--  <div class="row">
+              <div class="col-md-8 col-md-offset-2">
+                  <nvd3 options="performDashCtrl.options" data="performDashCtrl.data"></nvd3>
+              </div>
+          </div>-->
+    </div>
+    <div class="modal-footer">
+
+        <button class="btn btn-gray" type="button" ng-click="cancel()">Close</button>
+    </div>
+</div>
+
+<!-- Device Tracking & Deployment modal-->
+<div class="modal-content graphModal" ng-if="performDashCtrl.popNameToOpen == 'Device Tracking & Deployment'">
+    <div class="modal-header">
+        <h3 class="modal-title">Graph</h3>
+    </div>
+    <div class="modal-body">
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <nvd3 options="performDashCtrl.options" data="performDashCtrl.data"></nvd3>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+
+        <button class="btn btn-gray" type="button" ng-click="cancel()">Close</button>
+    </div>
+</div>
+<!-- NRD Summary modal-->
+<div class="modal-content graphModal" ng-if="performDashCtrl.popNameToOpen == 'NRD Summary'">
+    <div class="modal-header">
+        <h3 class="modal-title">Graph</h3>
+    </div>
+    <div class="modal-body">
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <nvd3 options="performDashCtrl.options" data="performDashCtrl.data"></nvd3>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+
+        <button class="btn btn-gray" type="button" ng-click="cancel()">Close</button>
+    </div>
+</div>
+<!--NID Summary modal-->
+<div class="modal-content graphModal" ng-if="performDashCtrl.popNameToOpen == 'NID Summary'">
+    <div class="modal-header">
+        <h3 class="modal-title">Graph</h3>
+    </div>
+    <div class="modal-body">
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <nvd3 options="performDashCtrl.options" data="performDashCtrl.data"></nvd3>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+
+        <button class="btn btn-gray" type="button" ng-click="cancel()">Close</button>
+    </div>
+</div>
+<!--Industry Analysis Data Points (RM Reported Values) modal-->
+<div class="modal-content graphModal" ng-if="performDashCtrl.popNameToOpen == 'Industry Analysis Data Points (RM Reported Values)'">
+    <div class="modal-header">
+        <h3 class="modal-title">Graph</h3>
+    </div>
+    <div class="modal-body">
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <nvd3 options="performDashCtrl.options" data="performDashCtrl.data"></nvd3>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+
+        <button class="btn btn-gray" type="button" ng-click="cancel()">Close</button>
+    </div>
+</div>

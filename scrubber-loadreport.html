@@ -1,0 +1,127 @@
+﻿<div class="row-panel">
+    <div class="container-fluid report-container">
+        <h5>Service Report</h5>
+        <div ng-controller="scrubbReportController">
+            <div class="row service-section" ng-init="getScrubReportData()">
+                <div class="col-md-5">
+                    <div class="row">
+                        <div class="col-md-3 pleft0">
+                            Company Name
+                        </div>
+                        <div class="col-md-5 pleft0">
+                            <input type="text" class="form-control custom-form-control" ng-model="companyName" readonly/>
+                        </div>
+                    </div>
+                    <div class="row ptop15">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12 pleft0">
+                                    <input type="checkbox" ng-model="clearData" />Clear existing data before loading
+                                </div>
+                                <div class="col-md-6 pleft0 ptop15">
+                                    Select PPU File(s)
+                                    <!--<div class="right-inner-addon">
+                                        <i class="icon-search"></i>
+                                        <input type="search" class="form-control custom-form-control" ng-model="searchPPU" ng-keyup="$event.keyCode == 13 ? searchFilter() : null" />
+                                    </div>-->
+                                </div>
+                                <div class="col-md-12 pleft0">
+                                    <div class="text-left pleft6">
+                                        <input type="checkbox" ng-click="selectAllPPU()" ng-model="selectPPU" />Select All
+                                    </div>
+                                    <div class="ppuSelectionScroll">
+                                        <div ng-repeat="ppu in ppuList">
+                                            <div ng-if="$index % 4 == 0"></div>
+                                            <div class="col-md-3 ppuBtn" ng-class="{'selected':ppu.selected}" ng-click="toggle(ppu)">
+                                                {{ppu.value}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 width46per">
+                    <!--SLA ROW Start-->
+                    <div class="">
+                        <fieldset class="scheduler-border">
+                            <legend class="scheduler-border">SLA Options</legend>
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <h6>SLA</h6>
+                                </div>
+                                <div class="col-md-3">
+                                    SLA List
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="slaSelection" ng-model="slaListSelection" value="false">Set Unassigned to List Selection
+                                    </label>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="slaSelection" ng-model="slaListSelection" value="true">Set ALL to list selection
+                                    </label>
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-control" ng-model="slaList">
+                                        <option ng-repeat="sla in SLASettings" value="{{sla.SLASettings}}">{{sla.SLASettings}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </fieldset>                       
+                    </div>
+                    <!--SLA ROW Start-->
+                    <!--Contract Coverage row start-->
+                    <div class="ptop40">
+                        <fieldset class="scheduler-border">
+                            <legend class="scheduler-border">Contract Coverage Options</legend>
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <h6>Contract Coverage </h6>
+                                </div>
+                                <div class="col-md-3">
+                                    Contract Coverage List
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="ccSelection" ng-model="ccListSelection" value="false">Set Unassigned to List Selection
+                                    </label>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="ccSelection" ng-model="ccListSelection" value="true">Set ALL to list selection
+                                    </label>
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-control" ng-model="ccList">
+                                        <option ng-repeat="cc in contractCoverage" value="{{cc.ContractCoverage}}">{{cc.ContractCoverage}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="col-md-2 width12 text-right">
+                    <div class="pright0">
+                        <div class="row">
+                            <button class="btn btn-blue width135" ng-click="downloadFrmNetwork()">Download from <br />Network</button>
+                        </div>
+                        <div class="row ptop15">
+                            <button class="btn btn-blue width135" ngf-change="fileSelected($files, $event, b)" ngf-pattern=".xls,.xlsx,.xlsb" 
+                                    accept=".xls,.xlsx,.xlsb" ngf-multiple="true" ngf-select ng-model="b.files">Import from <br />computer</button>
+                        </div>
+                        <!--<div class="row ptop15">
+                            <button class="btn btn-blue width135" ng-click="openFilelocation()">Go to MPS-PD-<br />Toolset Share Folder</button>
+                        </div>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

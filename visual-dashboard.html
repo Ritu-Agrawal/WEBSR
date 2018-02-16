@@ -1,0 +1,166 @@
+﻿<div class="cont visual-dashboard-cont">
+    <div class="container">
+        <!--<h2>Visual Dashboard</h2>-->
+        <div class="row vdcont-row">
+            <div class="col-md-3">
+                <h4>Fleet Utilization</h4>
+                <div class="vd-chart-block">
+                    <div id="fleet-Utilization"></div>
+                </div>
+                <div class="vd-title-block text-center">
+                    <h3>{{visualDashCtrl.vdFleetu.Utilization}} %</h3>
+                    <h5>Utilization</h5>
+                </div>         
+                <div class="vd-thumb-block">
+                    <span class="red-label">Low</span>
+                    <span class="yellow-label">Medium</span>
+                    <span class="green-label">High</span>
+                </div> 
+            </div>
+            <div class="col-md-3">
+                <h4>Usage Summary</h4>
+                <div class="vd-chart-block">
+                    <nvd3 id="usageSummary" options="optionsPie" data="visualDashCtrl.vdUsages.values" class="chart-center"></nvd3>
+                </div>
+                <div class="vd-title-block">
+                    <h5>Average Monthly Pages {{visualDashCtrl.vdUsages.chartValue | number:0}}</h5>
+                </div> 
+                <div class="vd-thumb-block">
+                    <span class="gray-label">Mono Pages</span>
+                    <span class="dark-yellow-label">MoOnce Pages</span>
+                    <span class="yellow-label">Color Pages</span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <h4>Service Performance</h4>
+                <div class="vd-chart-block">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="vertical-barchart-block text-center">
+                                <h5 class="chart-value">{{visualDashCtrl.vdServicep.SLAMet}}%</h5>
+                                <div class="progress-vertical">
+                                    <div class="fill-bar" style="height:{{visualDashCtrl.vdServicep.SLAMet}}%;"></div>
+                                </div>
+                            </div>
+                            <div class="vd-title-block text-center">
+                                <h5>SLA "MET" %</h5>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="vertical-barchart-block text-center">
+                                <h5 class="chart-value">{{visualDashCtrl.vdServicep.FleetUptime}}%</h5>
+                                <div class="progress-vertical">
+                                    <div class="fill-bar" style="height:{{visualDashCtrl.vdServicep.FleetUptime}}%;"></div>
+                                </div>
+                            </div>
+                            <div class="vd-title-block text-center">
+                                <h5>Fleet Uptime %</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>                 
+            </div>
+            <div class="col-md-3">
+                <h4>Current Fleet Mix</h4>
+                <div class="vd-chart-block">
+                    <nvd3 options="optionsDonut" data="visualDashCtrl.vdCurrentfm.values"  class="chart-center currentfleet"></nvd3>
+                    <div class="crnt-chart-cntr">
+                        <div class="vd-title-block text-center">
+                            <h3>{{visualDashCtrl.vdCurrentfm.chartValue | number:0}}</h3>
+                            <h5>Total Device Count</h5>
+                        </div> 
+                    </div>
+                </div> 
+                <div class="vd-thumb-block">   
+                    <span class="yellow-label">Mono MFPs</span>                                     
+                    <span class="dark-yellow-label">Color MFPs</span>                    
+                    <span class="gray-label">Color Printers</span>
+                    <span class="dark-gray-label">Mono MFPs</span>
+                </div>
+            </div>
+        </div><!--Row Ends-->
+        <div class="row vdcont-row">
+            <div class="col-md-3">
+                <h4>Duplex/Enviournment</h4>
+                <div class="vd-chart-block">
+                    <!--<nvd3 id="Duplex" options="optionsDuplex" data="dataDuplex" class="chart-center"></nvd3>-->
+                    <div id="fleet-Utilization2"></div>
+                </div>
+                <div class="vd-title-block text-center">
+                    <h3>{{visualDashCtrl.vdDuplex.Utilization}} %</h3>
+                    <h5>Duplex</h5>
+                </div> 
+                <div class="vd-thumb-block">
+                    <span class="red-label">Low</span>
+                    <span class="yellow-label">Medium</span>
+                    <span class="green-label">High</span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <h4>Executive Summary</h4>
+                <div class="vd-title-block">
+                    <h3>{{visualDashCtrl.vdExcuteObj.currency}}{{visualDashCtrl.vdExcuteObj.chartValue | number:0}}</h3>
+                    <h5>Avg. Monthly Fleet Cost</h5>
+                </div>
+                <div class="vd-chart-block">                     
+                    <nvd3 options="ExecutiveOptions" data="visualDashCtrl.vdExcutes" class="chart-center"></nvd3>
+                </div> 
+            </div>
+            <div class="col-md-3 nrdnid-block">
+                <h4>NRD &amp; NIDs</h4> 
+                <div class="vd-chart-block">
+                    <div class="circle-row">
+                        <span>NRD</span><span ng-repeat="nrdval in visualDashCtrl.vdNrdNids.NRD" class="ic-circle" ng-class="nrdval.Key"></span><!--<span ng-hide="nrdval.Value='false'"></span>-->
+                    </div>
+                    <div class="circle-row">
+                        <span>NIDs</span><span ng-repeat="nidval in visualDashCtrl.vdNrdNids.NID" class="ic-circle" ng-class="nidval.Key"></span>
+                    </div>
+                </div>                
+            </div>
+            <div class="col-md-3">
+                <h4>Transition</h4>
+                <div class="vd-chart-block">
+                    <h3>{{visualDashCtrl.vdtransite.NewSitesDeployed}}</h3>
+                    <h5>New Sites Deployed</h5>
+                    <div class="arrow-block">
+                        <span class="ic ic-left">&#129104;</span>
+                        <span class="ic ic-right">&#129106;</span> 
+                    </div>
+                    <h3>{{visualDashCtrl.vdtransite.NewDevicesInstalled}}</h3>
+                    <h5>New Devices Installed</h5>                    
+                </div> 
+            </div>
+        </div><!--Row Ends-->
+        <div class="row vdcont-row">
+            <div class="col-md-3">
+                <h4>Potential Savings</h4>
+                <div class="vd-chart-block">
+                     <div class="ps-block">
+                         <p ng-repeat="pot in visualDashCtrl.vdPotantail.values"><span>{{pot.key}}</span> <span>{{pot.y}}</span></p>
+                         <!--<p><span>MoOnCo +</span> <span>0</span></p>
+                         <p><span>Color +</span> <span>0</span></p>-->
+                     </div>
+                </div> 
+                <div class="vd-title-block text-center"> 
+                    <h5>Proposed % Change in Activity</h5>
+                </div> 
+            </div>
+            <div class="col-md-3">
+                <h4>HP Innovation</h4>
+                <div class="vd-chart-block hpinovat-chart-block">
+                    <ol>
+                        <li>HP JetAdvantage Calculators</li>
+                        <li>0 Recommended Product(s)</li>
+                        <li>Protected Savings</li>
+                        <li>$ 0</li>
+                    </ol>                     
+                </div> 
+            </div>
+            <div class="col-md-3" style="display:none">
+                <svg class="meter-pointer" width="120" height="20">
+                    <g transform="translate(100,10)"><path d="M4,0C3.998685723673402,-0.02957121734844751,1.3333333333333333,-90,0,-90S-4,0,-4,0S-1.3333333333333333,4,0,4S3.6666666666666665,0.3333333333333333,4,0" transform="rotate(-90)"></path></g>
+                </svg>
+            </div> 
+        </div><!--Row Ends-->
+    </div>
+</div>
